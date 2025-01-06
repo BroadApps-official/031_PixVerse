@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "set_rate_icon.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

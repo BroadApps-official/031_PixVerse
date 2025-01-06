@@ -1,0 +1,92 @@
+// MARK: - General
+
+// Onboarding VC
+
+"next" = "Next";
+"continue" = "Continue";
+"animationLabel" = "Cool animations!";
+"animationSublabel" = "Add cool animations with your favourite characters and not only on photorgaphy";
+"videoLabel" = "One-click video!";
+"videoSublabel" = "Creating videos will become much easier with our app";
+"effectsLabel" = "New effects!";
+"effectsSublabel" = "Keep up to date with the latest trends and innovations";
+"saveLabel" = "Save your video!";
+"saveSublabel" = "Store your masterpieces in the app and edit them anytime";
+"rateLabel" = "Rate our app in the AppStore";
+"rateSublabel" = "Help make the app even better";
+"notificationLabel" = "Don’t miss anything";
+"notificationSublabel" = "Don’t miss the most userful information.";
+"skip" = "Skip";
+"annual" = "Annual";
+"weekly" = "Weekly";
+"privacyPolicy" = "Privacy Policy";
+"restorePurchases" = "Restore Purchases";
+"termsOfUse" = "Terms of Use";
+"subscribe" = "Subscribe!";
+"exclusiveEffects" = "Exclusive effects and styles";
+"fullAccess" = "Full access with no quantity limits";
+"earlyAccess" = "Early access to in-app updates and new products";
+"failRestoreLabel" = "No Subscription Found";
+"failRestoreMessage" = "We couldn’t find an active subscription for your account";
+"pixverse" = "Pixverse";
+"animationGenerator" = "AI Animation Generator";
+
+// TabBar VC
+
+"home" = "Home";
+"myAnimations" = "My animations";
+"settings" = "Settings";
+
+// Home VC
+
+"create" = "Create";
+"selectGallery" = "Select from gallery";
+"takePphoto" = "Take a photo";
+"videoGeneration" = "Video Generation...";
+"result" = "Result";
+"saveFiles" = "Save to files";
+"videoSavedGallery" = "Video saved to gallery";
+"errorVideoGallery" = "Error, video not saved to gallery";
+"errorVideoGalleryMessage" = "Something went wrong or the server is not responding. Try again or do it later.";
+"tryAgain" = "Try Again";
+"videoSavedFiles" = "Video saved to files";
+"errorVideoFiles" = "Error, video not saved to files";
+"saveGallery" = "Save to gallery";
+"videoGenerationError" = "Video generation error";
+"generationLimitReached" = "Generation Limit Reached";
+"generationLimitReachedMessage" = "You can only generate a maximum of 2 images at a time. Please wait until one is finished";
+"videoNotReady" = "Video Not Ready";
+"videoNotReadyMessage" = "This video is still being processed and cannot be opened yet.";
+"previousGeneration" = "Previous Generation Interrupted";
+"previousGenerationMessage" = "It seems your previous generation process was interrupted. Please try again.";
+"cancel" = "Cancel";
+"videoGenerationTime" = "Generation usually takes about a minute. You can close this screen, the generation will go in “My Videos”"; 
+"videoGenerationTimeCell" = "Generation usually takes about a minute";
+"pro" = "Pro";
+"selectAction" = "Select action";
+"selectActionSublabel" = "Add a photo so we can do a cool effect with it";
+"previewShare" = "Share";
+"deleteVideo" = "Delete a video";
+"deleteVideoMessage" = "Are you sure you want to delete this video?";
+"tryDifferentPhoto" = "Please try using a different photo";
+"duration" = "Duration";
+"selectEffect" = "Select an effect";
+
+// Settings VC
+
+"subscriptionDetails" = "Subscription details";
+"notifications" = "Notifications";
+"rateApp" = "Rate app";
+"contact" = "Contact us";
+"privacy" = "Privacy Policy";
+"usage" = "Usage Policy";
+"back" = "Back";
+"rateApp" = "Rate app";
+"back" = "Back";
+"save" = "Save";
+"delete" = "Delete";
+"subscriptionDetailsSublabel" = "Information on subscription benefits and prices";
+
+"myAnimations" = "My animations";
+"emptyPage" = "Empty page";
+"emptyPageSublabel" = "You do not currently have any animations created";

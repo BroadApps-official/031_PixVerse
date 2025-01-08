@@ -185,6 +185,11 @@ final class HomeViewController: UIViewController {
         } else {
             isFirstGeneration = false
         }
+        
+        let generationVC = GenerationTimeViewController()
+        let navigationController = UINavigationController(rootViewController: generationVC)
+        navigationController.modalPresentationStyle = .fullScreen
+        present(navigationController, animated: true, completion: nil)
 
         guard let selectedTemplateId = selectedTemplate?.id else {
             print("Template not selected")
@@ -220,7 +225,6 @@ final class HomeViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case let .success(data):
-                    self.openGeneration()
                     let generationId = data.data.generationId
                     self.saveGenerationIdToUserDefaults(generationId)
                     self.pollGenerationStatus(generationId: generationId, selectedTemplateEffect: selectedTemplateEffect, imagePath: selectedImagePath)
@@ -229,6 +233,7 @@ final class HomeViewController: UIViewController {
                     if self.isFirstGeneration {
                         self.generationCount -= 1
                     }
+                    navigationController.dismiss(animated: true, completion: nil)
                     self.generationIdError()
                 }
             }

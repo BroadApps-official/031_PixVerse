@@ -54,40 +54,10 @@ final class OnboardingPageViewController: UIViewController {
         view.backgroundColor = UIColor.black
         setupVideo()
 
-        mainLabel.do { make in
-            make.text = L.pixverse.uppercased()
-            make.textColor = UIColor.labelsPrimary
-            make.font = .systemFont(ofSize: 52, weight: .black)
-            make.textAlignment = .center
-            make.numberOfLines = 0
-            make.transform = CGAffineTransform(scaleX: 1.0, y: 1.5)
-        }
-
-        subLabel.do { make in
-            make.text = L.animationGenerator.uppercased()
-            make.textColor = UIColor.labelsPrimary
-            make.font = .systemFont(ofSize: 24, weight: .black)
-            make.textAlignment = .center
-            make.numberOfLines = 0
-            make.transform = CGAffineTransform(scaleX: 1.0, y: 1.5)
-        }
-
-        view.addSubviews(videoView, mainLabel, subLabel)
+        view.addSubviews(videoView)
 
         videoView.snp.makeConstraints { make in
             make.leading.trailing.top.bottom.equalToSuperview()
-        }
-
-        mainLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(15)
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(5)
-        }
-
-        subLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(mainLabel.snp.bottom).offset(30)
-            make.leading.trailing.equalToSuperview().inset(15)
         }
     }
 

@@ -189,7 +189,7 @@ extension MyAnimationsViewController: UICollectionViewDataSource, UICollectionVi
             return
         }
 
-        let resultVC = ResultViewController(model: selectedVideoModel, isFirstGeneration: false)
+        let resultVC = ResultViewController(model: selectedVideoModel, generationCount: 0)
         let navigationController = UINavigationController(rootViewController: resultVC)
         navigationController.modalPresentationStyle = .fullScreen
         present(navigationController, animated: true, completion: nil)

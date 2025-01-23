@@ -86,7 +86,14 @@
 "save" = "Save";
 "delete" = "Delete";
 "subscriptionDetailsSublabel" = "Information on subscription benefits and prices";
-
 "myAnimations" = "My animations";
 "emptyPage" = "Empty page";
 "emptyPageSublabel" = "You do not currently have any animations created";
+
+// Subscription VC
+
+"unlockPremium" = "Unlock premium";
+"get100" = "Get 100+ templates";
+"exclusiveEffects" = "Exclusive effects and styles";
+"fullAccessNoLimits" = "Full access with no quantity limits";
+"earlyAccess" = "Early access to in-app updates and new products";

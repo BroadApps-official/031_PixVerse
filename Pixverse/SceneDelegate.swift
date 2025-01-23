@@ -3,20 +3,20 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     private let purchaseManager = SubscriptionManager()
-    
+
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         let launchScreenViewController = LaunchScreenViewController()
-        
+
         window.rootViewController = launchScreenViewController
         window.makeKeyAndVisible()
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             let onboardingShown = UserDefaults.standard.bool(forKey: "HasLaunchedBefore")
-            
+
             print("HasLaunchedBefore:", onboardingShown)
-            
+
             if !onboardingShown {
                 let onboardingVC = OnboardingViewController()
                 window.rootViewController = onboardingVC
@@ -24,10 +24,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 let tabBarController = TabBarController()
                 window.rootViewController = tabBarController
             } else {
-                let subVC = SubscriptionViewController(isFromOnboarding: false, isExitShown: true)
-                window.rootViewController = subVC
+                let tabBarController = TabBarController()
+                window.rootViewController = tabBarController
             }
-            
+
             window.makeKeyAndVisible()
             self.window = window
         }

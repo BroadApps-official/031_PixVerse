@@ -1,3 +1,4 @@
+import AVFoundation
 import SafariServices
 import StoreKit
 import UIKit
@@ -11,6 +12,7 @@ final class SubscriptionViewController: UIViewController {
     private let benefitsView = SubscribeView()
     private let annualView = AnnualSubView()
     private let weeklyView = WeekSubView()
+    private let unlockView = UnlockView()
 
     private let privacyLabel = SFPrivacyLabel()
     private let termsOfUseLabel = SFTermsOfUse()
@@ -23,6 +25,12 @@ final class SubscriptionViewController: UIViewController {
     private let isFromOnboarding: Bool
     private let isExitShown: Bool
     private var purchaseManager: SubscriptionManager
+
+    private let videoView = UIView()
+    private var player: AVPlayer?
+    private var playerLayer: AVPlayerLayer?
+
+    private var experimentV = String()
 
     // MARK: - Initializer
 
@@ -69,14 +77,20 @@ final class SubscriptionViewController: UIViewController {
 
         termsOfUseLabel.delegate = self
         privacyLabel.delegate = self
+
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            experimentV = appDelegate.experimentV
+        }
     }
 
     // MARK: - Private methods
 
     private func drawSelf() {
+        setupVideo()
+
         subImageView.image = UIImage(named: "sub_sub_image")
         gradientImageView.image = UIImage(named: "sub_gradient_image")
-        
+
         continueButton.setTitle(to: L.continue)
 
         exitButton.do { make in
@@ -91,8 +105,8 @@ final class SubscriptionViewController: UIViewController {
 
         view.addSubviews(
             subImageView,
+            videoView,
             gradientImageView,
-            benefitsView,
             annualView,
             weeklyView,
             privacyLabel,
@@ -102,9 +116,20 @@ final class SubscriptionViewController: UIViewController {
             exitButton
         )
 
+        if experimentV == "v2" {
+            view.addSubviews(unlockView)
+        } else {
+            view.addSubviews(benefitsView)
+        }
+
         subImageView.snp.makeConstraints { make in
             make.top.trailing.leading.equalToSuperview()
             make.height.equalTo(UIScreen.main.bounds.height * (414.0 / 844.0))
+        }
+        
+        videoView.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.height.equalTo(videoView.snp.width).multipliedBy(1080.0 / 1000.0)
         }
 
         gradientImageView.snp.makeConstraints { make in
@@ -116,13 +141,25 @@ final class SubscriptionViewController: UIViewController {
             }
         }
 
-        benefitsView.snp.makeConstraints { make in
-            make.height.equalTo(214)
-            make.leading.trailing.equalToSuperview().inset(16)
-            if UIDevice.isIphoneBelowX {
-                make.bottom.equalTo(annualView.snp.top).offset(-12)
-            } else {
-                make.bottom.equalTo(annualView.snp.top).offset(-42)
+        if experimentV == "v2" {
+            unlockView.snp.makeConstraints { make in
+                make.height.equalTo(225)
+                make.leading.trailing.equalToSuperview().inset(16)
+                if UIDevice.isIphoneBelowX {
+                    make.bottom.equalTo(annualView.snp.top).offset(-12)
+                } else {
+                    make.bottom.equalTo(annualView.snp.top).offset(-30)
+                }
+            }
+        } else {
+            benefitsView.snp.makeConstraints { make in
+                make.height.equalTo(214)
+                make.leading.trailing.equalToSuperview().inset(16)
+                if UIDevice.isIphoneBelowX {
+                    make.bottom.equalTo(annualView.snp.top).offset(-12)
+                } else {
+                    make.bottom.equalTo(annualView.snp.top).offset(-42)
+                }
             }
         }
 
@@ -170,6 +207,47 @@ final class SubscriptionViewController: UIViewController {
         }
     }
 
+    // MARK: - Video
+    private func setupVideo() {
+        guard let videoURL = Bundle.main.url(forResource: "sub_video", withExtension: "mp4") else {
+            print("Video not found")
+            return
+        }
+        player = AVPlayer(url: videoURL)
+        playerLayer = AVPlayerLayer(player: player)
+        playerLayer?.videoGravity = .resizeAspectFill
+        playerLayer?.frame = videoView.bounds
+        videoView.layer.addSublayer(playerLayer!)
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(restartVideo),
+            name: .AVPlayerItemDidPlayToEndTime,
+            object: player?.currentItem
+        )
+
+        player?.play()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        playerLayer?.frame = videoView.bounds
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        player?.pause()
+    }
+
+    @objc private func restartVideo() {
+        player?.seek(to: .zero)
+        player?.play()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem)
+    }
+
     // MARK: - Actions
     @objc private func closeButtonTapped() {
         if isFromOnboarding {
@@ -210,7 +288,7 @@ final class SubscriptionViewController: UIViewController {
             }
         }
     }
-
+    
     private func loadPaywallDetails() async {
         await withCheckedContinuation { continuation in
             purchaseManager.loadPaywalls {
@@ -220,23 +298,22 @@ final class SubscriptionViewController: UIViewController {
 
         let products = purchaseManager.productsApphud
         let availableProductIds = products.map { $0.productId }
-        
-        if let annualProduct = products.first(where: { $0.productId == "yearly_39.99_nottrial" }),
-           let skProduct = annualProduct.skProduct {
+
+        if let firstProduct = products.first, let skProduct = firstProduct.skProduct {
             let priceString = skProduct.price.stringValue
             let currencySymbol = skProduct.priceLocale.currencySymbol ?? ""
             annualView.updateDetails(title: "Annual", price: "\(currencySymbol)\(priceString)")
+            
             if let price = Double(priceString) {
                 let weeklyPrice = price / 52.0
-                let weeklyText = String(format: "\(currencySymbol)%.2f per week", weeklyPrice)
+                let weeklyText = String(format: "\(currencySymbol)%.2f", weeklyPrice)
                 annualView.updateUnderTitleLabel(text: weeklyText)
             }
         } else {
             print("Annual sub not found.")
         }
 
-        if let weeklyProduct = products.first(where: { $0.productId == "week_4.99_nottrial" }),
-           let skProduct = weeklyProduct.skProduct {
+        if products.count > 1, let secondProduct = products[safe: 1], let skProduct = secondProduct.skProduct {
             let priceString = skProduct.price.stringValue
             let currencySymbol = skProduct.priceLocale.currencySymbol ?? ""
             weeklyView.updateDetails(title: "Weekly", price: "\(currencySymbol)\(priceString)")

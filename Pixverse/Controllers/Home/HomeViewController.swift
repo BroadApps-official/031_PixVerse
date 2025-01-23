@@ -2,6 +2,7 @@ import ApphudSDK
 import AVFoundation
 import MobileCoreServices
 import SnapKit
+import StoreKit
 import UIKit
 import UniformTypeIdentifiers
 
@@ -14,15 +15,16 @@ final class HomeViewController: UIViewController {
     private var selectedImagePath: String?
     private var generatedURL: String?
     private let selectButton = GeneralButton()
+    private var activeIndexPath: IndexPath?
 
     var activeGenerationCount = 0
     let maxGenerationCount = 2
-    private var experimentV = String()
-    
+
     private var generationCount: Int {
         get { UserDefaults.standard.integer(forKey: "generationCount") }
         set { UserDefaults.standard.set(newValue, forKey: "generationCount") }
     }
+
     private var isFirstGeneration: Bool = false
 
     private lazy var actionProgress: UIActivityIndicatorView = {
@@ -90,10 +92,6 @@ final class HomeViewController: UIViewController {
         selectedTemplate = templates.first
         navigationItem.title = templates.first?.effect
         toggleActionProgress()
-        
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-            self.experimentV = appDelegate.experimentV
-        }
     }
 
     deinit {
@@ -178,14 +176,15 @@ final class HomeViewController: UIViewController {
             present(alert, animated: true, completion: nil)
             return
         }
-        
+
         if generationCount == 0 {
             isFirstGeneration = true
             generationCount += 1
         } else {
             isFirstGeneration = false
+            generationCount += 1
         }
-        
+
         let generationVC = GenerationTimeViewController()
         let navigationController = UINavigationController(rootViewController: generationVC)
         navigationController.modalPresentationStyle = .fullScreen
@@ -329,7 +328,7 @@ final class HomeViewController: UIViewController {
                 print("Failed to cache initial MyVideoModel.")
             }
         }
-        
+
         func fetchStatus() {
             NetworkService.shared.fetchEffectGenerationStatus(generationId: generationId) { result in
                 DispatchQueue.main.async {
@@ -360,13 +359,14 @@ final class HomeViewController: UIViewController {
                                 createdAt: creationDate,
                                 generationId: generationId
                             )
-                            
-                            let isFirstGenerationToPass = self.purchaseManager.hasUnlockedPro ? false : self.isFirstGeneration
-                            let resultVC = ResultViewController(model: updatedVideo, isFirstGeneration: isFirstGenerationToPass)
+
+                            let generationCountToPass = self.generationCount
+                            let resultVC = ResultViewController(model: updatedVideo, generationCount: generationCountToPass)
                             resultVC.delegate = self
                             let navigationController = UINavigationController(rootViewController: resultVC)
                             navigationController.modalPresentationStyle = .fullScreen
                             self.present(navigationController, animated: true, completion: nil)
+
                             self.activeGenerationCount -= 1
                             timer?.invalidate()
                         } else if data.status == "error" {
@@ -401,7 +401,7 @@ final class HomeViewController: UIViewController {
                         }
 
                         self.activeGenerationCount -= 1
-                        
+
                         if self.isFirstGeneration {
                             self.generationCount -= 1
                         }
@@ -414,7 +414,7 @@ final class HomeViewController: UIViewController {
             fetchStatus()
         }
     }
-    
+
     private func generationErrorAlert(generationId: String, selectedTemplateEffect: String, imagePath: String) {
         let alert = UIAlertController(title: L.videoGenerationError,
                                       message: L.errorVideoGalleryMessage,
@@ -596,19 +596,7 @@ final class HomeViewController: UIViewController {
         if purchaseManager.hasUnlockedPro {
             showImageSelectionAlert()
         } else {
-            if experimentV == "v1" {
-                let generationCount = UserDefaults.standard.integer(forKey: "generationCount")
-                if generationCount >= 1 {
-                    openSubscription()
-                } else {
-                    showImageSelectionAlert()
-                }
-            } else if experimentV == "v2" {
-                openSubscription()
-            } else {
-//                openSubscription()
-                showImageSelectionAlert()
-            }
+            openSubscription()
         }
     }
 }
@@ -722,13 +710,13 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         alert.addAction(selectFromGalleryAction)
         alert.addAction(takePhotoAction)
         alert.addAction(cancelAction)
-        
+
         if UIDevice.isIpad {
             if let popoverController = alert.popoverPresentationController {
-                popoverController.sourceView = self.view
+                popoverController.sourceView = view
                 popoverController.sourceRect = CGRect(
-                    x: self.view.bounds.midX,
-                    y: self.view.bounds.midY,
+                    x: view.bounds.midX,
+                    y: view.bounds.midY,
                     width: 0,
                     height: 0
                 )
@@ -738,17 +726,30 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
 
         present(alert, animated: true)
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
     }
 
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let visibleRect = CGRect(origin: collectionView.contentOffset, size: collectionView.bounds.size)
-        if let indexPath = collectionView.indexPathForItem(at: CGPoint(x: visibleRect.midX, y: visibleRect.midY)) {
-            let template = templates[indexPath.item]
-            selectedTemplate = template
-            navigationItem.title = template.effect
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let visibleCells = collectionView.indexPathsForVisibleItems
+            .sorted { top, bottom -> Bool in
+                top.section < bottom.section || top.row < bottom.row
+            }
+
+        for indexPath in visibleCells {
+            guard let cell = collectionView.cellForItem(at: indexPath) as? EffectCell else { continue }
+            let cellRect = collectionView.layoutAttributesForItem(at: indexPath)?.frame
+            let isCompletelyVisible = collectionView.bounds.contains(cellRect ?? CGRect.zero)
+
+            if isCompletelyVisible {
+                let template = templates[indexPath.item]
+                selectedTemplate = template
+                navigationItem.title = template.effect
+                cell.startPlayingVideo()
+            } else {
+                cell.resetVideo()
+            }
         }
     }
 }
@@ -756,7 +757,9 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
 // MARK: - ResultViewControllerDelegate
 extension HomeViewController: ResultViewControllerDelegate {
     func didTapCloseButton() {
-        openSubscription()
+        if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+            SKStoreReviewController.requestReview(in: scene)
+        }
     }
 }
 

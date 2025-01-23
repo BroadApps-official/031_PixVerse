@@ -1,5 +1,5 @@
-import UIKit
 import StoreKit
+import UIKit
 
 final class OnboardingViewController: UIViewController {
     // MARK: - Life cycle
@@ -152,10 +152,8 @@ extension OnboardingViewController {
             )
         case .rate:
             DispatchQueue.main.async {
-                if #available(iOS 15.0, *) {
-                    if let scene = self.view.window?.windowScene {
-                        SKStoreReviewController.requestReview(in: scene)
-                    }
+                if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                    SKStoreReviewController.requestReview(in: scene)
                 }
             }
 
@@ -178,7 +176,7 @@ extension OnboardingViewController {
     }
 
     @objc private func openSubVC() {
-        let subscriptionVC = SubscriptionViewController(isFromOnboarding: true, isExitShown: true)
+        let subscriptionVC = SubscriptionViewController(isFromOnboarding: true, isExitShown: false)
         subscriptionVC.modalPresentationStyle = .fullScreen
         present(subscriptionVC, animated: true, completion: nil)
     }

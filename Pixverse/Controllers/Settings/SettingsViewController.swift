@@ -1,12 +1,13 @@
-import UIKit
+import ApphudSDK
 import MessageUI
-import StoreKit
 import SafariServices
+import StoreKit
+import UIKit
 import WebKit
 
 final class SettingsViewController: UIViewController {
     // MARK: - Properties
-    
+
     private let stackView = UIStackView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -35,16 +36,16 @@ final class SettingsViewController: UIViewController {
         appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
-        
+
         tabBarController?.tabBar.isTranslucent = true
         tabBarController?.tabBar.backgroundImage = UIImage()
         tabBarController?.tabBar.shadowImage = UIImage()
-        
+
         title = L.settings
         view.backgroundColor = UIColor.bgPrimary
 
         drawSelf()
-        
+
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
 
@@ -77,7 +78,7 @@ final class SettingsViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.bottom.equalToSuperview()
         }
-        
+
         contentView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.width.equalTo(scrollView)
@@ -96,11 +97,11 @@ final class SettingsViewController: UIViewController {
                 make.height.equalTo(81)
             }
         }
-        
+
         upgradeView.snp.makeConstraints { make in
             make.height.equalTo(99)
-        }        
-        
+        }
+
         notificationsView.snp.makeConstraints { make in
             make.height.equalTo(63)
         }
@@ -130,7 +131,7 @@ extension SettingsViewController: RateSettingsViewDelegate {
             guard let url = URL(string: "itms-apps://itunes.apple.com/app/id6739500119?action=write-review") else {
                 return
             }
-            
+
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             } else {
@@ -146,18 +147,23 @@ extension SettingsViewController: ContactSettingsViewDelegate {
         guard MFMailComposeViewController.canSendMail() else {
             let alert = UIAlertController(title: "Error", message: "Mail services are not available", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            present(alert, animated: true, completion: nil)
             return
         }
-        
+
         let mailComposeVC = MFMailComposeViewController()
-        mailComposeVC.setToRecipients(["erbolatttsaliev12@yandex.kz"]) 
+        mailComposeVC.setToRecipients(["erbolatttsaliev12@yandex.kz"])
         mailComposeVC.setSubject("Support Request")
-        mailComposeVC.setMessageBody("Please describe your issue here.", isHTML: false)
-        
+        let userId = Apphud.userID()
+        let messageBody = """
+        Please describe your issue here.
+
+        User ID: \(userId)
+        """
+        mailComposeVC.setMessageBody(messageBody, isHTML: false)
         mailComposeVC.mailComposeDelegate = self
-        
-        self.present(mailComposeVC, animated: true, completion: nil)
+
+        present(mailComposeVC, animated: true, completion: nil)
     }
 }
 
@@ -168,7 +174,7 @@ extension SettingsViewController: PrivacySettingsViewDelegate {
             print("Invalid URL")
             return
         }
-        
+
         let webView = WKWebView()
         webView.navigationDelegate = self as? WKNavigationDelegate
         webView.load(URLRequest(url: url))
@@ -176,7 +182,7 @@ extension SettingsViewController: PrivacySettingsViewDelegate {
         let webViewViewController = UIViewController()
         webViewViewController.view = webView
 
-        self.present(webViewViewController, animated: true, completion: nil)
+        present(webViewViewController, animated: true, completion: nil)
     }
 }
 
@@ -187,7 +193,7 @@ extension SettingsViewController: UsageSettingsViewDelegate {
             print("Invalid URL")
             return
         }
-        
+
         let webView = WKWebView()
         webView.navigationDelegate = self as? WKNavigationDelegate
         webView.load(URLRequest(url: url))
@@ -195,7 +201,7 @@ extension SettingsViewController: UsageSettingsViewDelegate {
         let webViewViewController = UIViewController()
         webViewViewController.view = webView
 
-        self.present(webViewViewController, animated: true, completion: nil)
+        present(webViewViewController, animated: true, completion: nil)
     }
 }
 
@@ -211,12 +217,12 @@ extension SettingsViewController: SKPaymentQueueDelegate {
     func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
         let alert = UIAlertController(title: "Restore Purchases", message: "Your purchases have been restored.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
-    
+
     func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
         let alert = UIAlertController(title: "Error", message: "There was an error restoring your purchases. Please try again.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 }

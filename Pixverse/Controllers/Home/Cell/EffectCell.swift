@@ -10,15 +10,19 @@ final class EffectCell: UICollectionViewCell {
     private var player: AVPlayer?
     private var playerLayer: AVPlayerLayer?
     private var durationLabel = UILabel()
-    
+
     private let playImageView = UIImageView()
     let blurEffect = UIBlurEffect(style: .light)
     private let blurEffectView: UIVisualEffectView
 
     private var isVideoPlaying = false
 
+    var isPlaying: Bool {
+        return player?.timeControlStatus == .playing
+    }
+
     override init(frame: CGRect) {
-        self.blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView = UIVisualEffectView(effect: blurEffect)
         super.init(frame: frame)
         contentView.backgroundColor = .white.withAlphaComponent(0.05)
         setupUI()
@@ -28,7 +32,7 @@ final class EffectCell: UICollectionViewCell {
     }
 
     required init?(coder: NSCoder) {
-        self.blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView = UIVisualEffectView(effect: blurEffect)
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -38,7 +42,7 @@ final class EffectCell: UICollectionViewCell {
             make.textAlignment = .center
             make.textColor = .white
         }
-        
+
         blurEffectView.do { make in
             make.layer.cornerRadius = 38
             make.layer.masksToBounds = true
@@ -66,12 +70,12 @@ final class EffectCell: UICollectionViewCell {
             make.leading.equalTo(videoView.snp.leading).offset(16)
             make.bottom.equalTo(videoView.snp.bottom).offset(-16)
         }
-        
+
         playImageView.snp.makeConstraints { make in
             make.center.equalTo(videoView.snp.center)
             make.size.equalTo(76)
         }
-        
+
         blurEffectView.snp.makeConstraints { make in
             make.edges.equalTo(playImageView.snp.edges)
         }
@@ -162,7 +166,24 @@ final class EffectCell: UICollectionViewCell {
         player?.seek(to: .zero)
         player?.play()
     }
-    
+
+    func startPlayingVideo() {
+        guard let player = player else { return }
+        player.seek(to: .zero)
+        player.play()
+        isVideoPlaying = true
+        blurEffectView.isHidden = true
+        playImageView.isHidden = true
+    }
+
+    func resetVideo() {
+        player?.pause()
+        player?.seek(to: .zero)
+        isVideoPlaying = false
+        blurEffectView.isHidden = true
+        playImageView.isHidden = true
+    }
+
     @objc private func handleTap() {
         guard let player = player else { return }
 

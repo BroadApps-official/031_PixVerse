@@ -16,7 +16,6 @@ final class WeekSubView: UIControl {
     private let underPriceLabel = UILabel()
     private let priceStackView = UIStackView()
     private let containerView = UIView()
-
     private let circleImageView = UIImageView()
 
     weak var delegate: WeekSubViewDelegate?
@@ -24,11 +23,19 @@ final class WeekSubView: UIControl {
     var dynamicTitle: String?
     var dynamicPrice: String?
 
+    private var experimentV = String()
+    private let weekLabel = UILabel()
+    private let weekValueLabel = UILabel()
+
     init() {
         super.init(frame: .zero)
         setupView()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         addGestureRecognizer(tapGesture)
+
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            experimentV = appDelegate.experimentV
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -39,6 +46,13 @@ final class WeekSubView: UIControl {
         backgroundColor = .clear
         containerView.isUserInteractionEnabled = false
         circleImageView.image = UIImage(named: "sub_circle_empty")
+
+        weekLabel.do { make in
+            make.text = "/ week"
+            make.textAlignment = .right
+            make.font = UIFont.CustomFont.caption1Regular
+            make.textColor = UIColor.labelsTertiary
+        }
 
         containerView.do { make in
             make.backgroundColor = UIColor.bgTertiary
@@ -53,9 +67,9 @@ final class WeekSubView: UIControl {
         }
 
         priceLabel.do { make in
-            make.font = UIFont.CustomFont.bodyEmphasized
-            make.text = "$4.99"
+            make.text = "$14.99"
             make.textAlignment = .center
+            make.font = UIFont.CustomFont.bodyEmphasized
             make.textColor = UIColor.labelsPrimary
         }
 
@@ -73,8 +87,12 @@ final class WeekSubView: UIControl {
             make.distribution = .fill
         }
 
-        priceStackView.addArrangedSubviews([priceLabel, underPriceLabel])
-        addSubviews(containerView, circleImageView, titleLabel, priceStackView)
+        if experimentV == "v2" {
+            addSubviews(containerView, circleImageView, titleLabel, weekLabel, priceLabel)
+        } else {
+            priceStackView.addArrangedSubviews([priceLabel, underPriceLabel])
+            addSubviews(containerView, circleImageView, titleLabel, priceStackView)
+        }
 
         containerView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -91,17 +109,34 @@ final class WeekSubView: UIControl {
             make.leading.equalTo(circleImageView.snp.trailing).offset(8)
         }
 
-        priceStackView.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(16)
-            make.centerY.equalToSuperview()
+        if experimentV == "v2" {
+            weekLabel.snp.makeConstraints { make in
+                make.centerY.equalToSuperview()
+                make.trailing.equalToSuperview().inset(15)
+            }
+
+            priceLabel.snp.makeConstraints { make in
+                make.centerY.equalToSuperview()
+                make.trailing.equalTo(weekLabel.snp.leading).offset(-2)
+            }
+        } else {
+            priceStackView.snp.makeConstraints { make in
+                make.trailing.equalToSuperview().inset(16)
+                make.centerY.equalToSuperview()
+            }
         }
     }
 
     private func configureAppearance() {
         if isSelected {
-            containerView.layer.borderColor = UIColor.colorsSecondary.cgColor
+            if experimentV == "v2" {
+                circleImageView.image = UIImage(named: "sub_circle_fill_v2")
+                containerView.layer.borderColor = UIColor(hex: "#A769FF").cgColor
+            } else {
+                circleImageView.image = UIImage(named: "sub_circle_fill")
+                containerView.layer.borderColor = UIColor.colorsSecondary.cgColor
+            }
             containerView.layer.borderWidth = 1
-            circleImageView.image = UIImage(named: "sub_circle_fill")
         } else {
             containerView.layer.borderColor = UIColor.clear.cgColor
             containerView.layer.borderWidth = 0
@@ -114,7 +149,7 @@ final class WeekSubView: UIControl {
         dynamicPrice = price
 
         titleLabel.text = dynamicTitle ?? L.weekly
-        priceLabel.text = dynamicPrice ?? "$4.99"
+        priceLabel.text = dynamicPrice ?? "$14.99"
         underPriceLabel.text = "per week"
     }
 

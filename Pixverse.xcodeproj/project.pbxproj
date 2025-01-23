@@ -46,7 +46,6 @@
 		E78D05022D133AF800A40CBB /* ApphudSDK in Frameworks */ = {isa = PBXBuildFile; productRef = E78D05012D133AF800A40CBB /* ApphudSDK */; };
 		E78D05222D14417600A40CBB /* Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78D05212D14417600A40CBB /* Localized.swift */; };
 		E78D054D2D1B7E6B00A40CBB /* UIImageExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78D054C2D1B7E6B00A40CBB /* UIImageExtention.swift */; };
-		E78D05562D1C507C00A40CBB /* onb_video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E78D05552D1C507C00A40CBB /* onb_video.mp4 */; };
 		E7A153502CEBAEF1002A7A36 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A1534F2CEBAEF1002A7A36 /* NetworkService.swift */; };
 		E7A153522CEC9388002A7A36 /* EffectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A153512CEC9388002A7A36 /* EffectCell.swift */; };
 		E7A153762CECEC06002A7A36 /* GenerationTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A153752CECEC06002A7A36 /* GenerationTimeViewController.swift */; };
@@ -65,6 +64,10 @@
 		E7B113AB2C14B06300E96820 /* GeneralButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B113AA2C14B06300E96820 /* GeneralButton.swift */; };
 		E7B113BA2C14C35200E96820 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B113B92C14C35200E96820 /* TabBarController.swift */; };
 		E7B1142F2C1B342400E96820 /* LaunchScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B1142E2C1B342400E96820 /* LaunchScreenViewController.swift */; };
+		E7B370B32D3FA5060059F056 /* onb_video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E7B370B22D3FA5060059F056 /* onb_video.mp4 */; };
+		E7B370B82D3FBD760059F056 /* UnlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B370B72D3FBD760059F056 /* UnlockView.swift */; };
+		E7B370BA2D3FFBE30059F056 /* ArratExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B370B92D3FFBE30059F056 /* ArratExtention.swift */; };
+		E7B370BC2D410B610059F056 /* sub_video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E7B370BB2D410B610059F056 /* sub_video.mp4 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -98,7 +101,6 @@
 		E78280632D13184500AFF803 /* WeekSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekSubView.swift; sourceTree = "<group>"; };
 		E78D05212D14417600A40CBB /* Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localized.swift; sourceTree = "<group>"; };
 		E78D054C2D1B7E6B00A40CBB /* UIImageExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtention.swift; sourceTree = "<group>"; };
-		E78D05552D1C507C00A40CBB /* onb_video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = onb_video.mp4; sourceTree = "<group>"; };
 		E7A1534F2CEBAEF1002A7A36 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		E7A153512CEC9388002A7A36 /* EffectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectCell.swift; sourceTree = "<group>"; };
 		E7A153752CECEC06002A7A36 /* GenerationTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationTimeViewController.swift; sourceTree = "<group>"; };
@@ -117,6 +119,10 @@
 		E7B113AA2C14B06300E96820 /* GeneralButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralButton.swift; sourceTree = "<group>"; };
 		E7B113B92C14C35200E96820 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		E7B1142E2C1B342400E96820 /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
+		E7B370B22D3FA5060059F056 /* onb_video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = onb_video.mp4; sourceTree = "<group>"; };
+		E7B370B72D3FBD760059F056 /* UnlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockView.swift; sourceTree = "<group>"; };
+		E7B370B92D3FFBE30059F056 /* ArratExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArratExtention.swift; sourceTree = "<group>"; };
+		E7B370BB2D410B610059F056 /* sub_video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sub_video.mp4; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,6 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				E73FD5512CCAA1CD00F7C940 /* SubscriptionViewController.swift */,
+				E7B370B42D3FA59A0059F056 /* Video */,
 				E73FD5532CCAA21300F7C940 /* View */,
 			);
 			path = Subscription;
@@ -187,6 +194,7 @@
 				E78280612D1315EC00AFF803 /* AnnualSubView.swift */,
 				E78280632D13184500AFF803 /* WeekSubView.swift */,
 				E73FD5562CCAC2E900F7C940 /* SubscribeView.swift */,
+				E7B370B72D3FBD760059F056 /* UnlockView.swift */,
 				E73FD5582CCAFAD700F7C940 /* SFPrivacyLabel.swift */,
 				E73FD55A2CCAFE3D00F7C940 /* SFTermsOfUse.swift */,
 				E73FD55C2CCAFEB800F7C940 /* SFRestrorePurchaseLabel.swift */,
@@ -284,7 +292,7 @@
 		E78D054E2D1C382200A40CBB /* Video */ = {
 			isa = PBXGroup;
 			children = (
-				E78D05552D1C507C00A40CBB /* onb_video.mp4 */,
+				E7B370B22D3FA5060059F056 /* onb_video.mp4 */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -331,6 +339,7 @@
 			children = (
 				E7B113A02C14AF0800E96820 /* Do.swift */,
 				E78D05212D14417600A40CBB /* Localized.swift */,
+				E7B370B92D3FFBE30059F056 /* ArratExtention.swift */,
 			);
 			path = Foudation;
 			sourceTree = "<group>";
@@ -402,6 +411,14 @@
 				E7B1142E2C1B342400E96820 /* LaunchScreenViewController.swift */,
 			);
 			path = LaunchScreen;
+			sourceTree = "<group>";
+		};
+		E7B370B42D3FA59A0059F056 /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				E7B370BB2D410B610059F056 /* sub_video.mp4 */,
+			);
+			path = Video;
 			sourceTree = "<group>";
 		};
 		E7E1CA372C6E46C60092368E /* Cell */ = {
@@ -491,11 +508,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E78D05562D1C507C00A40CBB /* onb_video.mp4 in Resources */,
+				E7B370B32D3FA5060059F056 /* onb_video.mp4 in Resources */,
 				E7B113942C14922E00E96820 /* Localizable.strings in Resources */,
 				E70DDFE52D26BEFE006749D8 /* GoogleService-Info.plist in Resources */,
 				E759BEE42C1478D600FC2CCB /* Assets.xcassets in Resources */,
 				E712CAF72D0B0689005C0565 /* LottieAnimation.json in Resources */,
+				E7B370BC2D410B610059F056 /* sub_video.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -562,6 +580,7 @@
 				E7B113A52C14AF5D00E96820 /* UIStackViewExtension.swift in Sources */,
 				E78280642D13184500AFF803 /* WeekSubView.swift in Sources */,
 				E7A153762CECEC06002A7A36 /* GenerationTimeViewController.swift in Sources */,
+				E7B370B82D3FBD760059F056 /* UnlockView.swift in Sources */,
 				E74EF7D02D119B56003ECCEC /* PrivacySettingsView.swift in Sources */,
 				E759BEDB2C1478D500FC2CCB /* AppDelegate.swift in Sources */,
 				E7A153502CEBAEF1002A7A36 /* NetworkService.swift in Sources */,
@@ -569,6 +588,7 @@
 				E71D00432CDC546E0011C8AF /* VideoSaver.swift in Sources */,
 				E7B1139A2C14AE2B00E96820 /* OnboardingPageViewController.swift in Sources */,
 				E7A1537F2CEF42E5002A7A36 /* AnimationCell.swift in Sources */,
+				E7B370BA2D3FFBE30059F056 /* ArratExtention.swift in Sources */,
 				E74EF7CA2D1197B6003ECCEC /* UpgradeSettingsView.swift in Sources */,
 				E75816BD2CB7DE6100CEEB7C /* MyAnimationsViewController.swift in Sources */,
 				E74EF7C62D118C26003ECCEC /* EffectModels.swift in Sources */,

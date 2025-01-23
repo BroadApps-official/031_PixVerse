@@ -21,7 +21,7 @@ final class ResultViewController: UIViewController {
     private var player: AVPlayer?
     private var generatedURL: String?
     private var model: GeneratedVideoModel
-    private let isFirstGeneration: Bool
+    private let generationCount: Int
     private var aspectRatio: CGFloat = 16 / 9
     private var isPlaying = false
 
@@ -29,9 +29,9 @@ final class ResultViewController: UIViewController {
     weak var delegate: ResultViewControllerDelegate?
 
     // MARK: - Init
-    init(model: GeneratedVideoModel, isFirstGeneration: Bool) {
+    init(model: GeneratedVideoModel, generationCount: Int) {
         self.model = model
-        self.isFirstGeneration = isFirstGeneration
+        self.generationCount = generationCount
         generatedURL = model.video
         blurEffectView = UIVisualEffectView(effect: blurEffect)
         super.init(nibName: nil, bundle: nil)
@@ -156,13 +156,17 @@ final class ResultViewController: UIViewController {
     }
 
     @objc private func didTapCloseButton() {
-        if isFirstGeneration {
+        if shouldOpenForGenerationCount(generationCount) {
             dismiss(animated: true) {
                 self.delegate?.didTapCloseButton()
             }
         } else {
             dismiss(animated: true)
         }
+    }
+
+    private func shouldOpenForGenerationCount(_ count: Int) -> Bool {
+        return count == 1 || count == 3 || count == 5 || count % 10 == 0
     }
 
     @objc private func didTapMenuButton() {

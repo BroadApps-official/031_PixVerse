@@ -41,7 +41,6 @@
 		E78280622D1315EC00AFF803 /* AnnualSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78280612D1315EC00AFF803 /* AnnualSubView.swift */; };
 		E78280642D13184500AFF803 /* WeekSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78280632D13184500AFF803 /* WeekSubView.swift */; };
 		E78D04FA2D133ADA00A40CBB /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E78D04F92D133ADA00A40CBB /* SnapKit */; };
-		E78D04FC2D133ADA00A40CBB /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = E78D04FB2D133ADA00A40CBB /* SnapKit-Dynamic */; };
 		E78D04FF2D133AEE00A40CBB /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = E78D04FE2D133AEE00A40CBB /* Lottie */; };
 		E78D05022D133AF800A40CBB /* ApphudSDK in Frameworks */ = {isa = PBXBuildFile; productRef = E78D05012D133AF800A40CBB /* ApphudSDK */; };
 		E78D05222D14417600A40CBB /* Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78D05212D14417600A40CBB /* Localized.swift */; };
@@ -139,7 +138,6 @@
 				E70DDFDB2D26B6B9006749D8 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				E70DDFD72D26B6B9006749D8 /* FirebaseAnalytics in Frameworks */,
 				E70DDFE32D26B9D6006749D8 /* FirebaseCrashlytics in Frameworks */,
-				E78D04FC2D133ADA00A40CBB /* SnapKit-Dynamic in Frameworks */,
 				E70DDFDF2D26B6B9006749D8 /* FirebaseAppDistribution-Beta in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -448,7 +446,6 @@
 			name = Pixverse;
 			packageProductDependencies = (
 				E78D04F92D133ADA00A40CBB /* SnapKit */,
-				E78D04FB2D133ADA00A40CBB /* SnapKit-Dynamic */,
 				E78D04FE2D133AEE00A40CBB /* Lottie */,
 				E78D05012D133AF800A40CBB /* ApphudSDK */,
 				E70DDFD62D26B6B9006749D8 /* FirebaseAnalytics */,
@@ -895,11 +892,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E78D04F82D133ADA00A40CBB /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
-		};
-		E78D04FB2D133ADA00A40CBB /* SnapKit-Dynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E78D04F82D133ADA00A40CBB /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = "SnapKit-Dynamic";
 		};
 		E78D04FE2D133AEE00A40CBB /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;

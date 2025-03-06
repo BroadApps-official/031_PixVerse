@@ -16,7 +16,7 @@ final class SubscriptionViewController: UIViewController {
 
     private let privacyLabel = SFPrivacyLabel()
     private let termsOfUseLabel = SFTermsOfUse()
-    private let restorePurchaseLabel = SFRestrorePurchaseLabel()
+    private let restorePurchaseLabel = SFRestrorePurchaseLabel(isToken: false)
 
     private let continueButton = GeneralButton()
     private let exitButton = UIButton(type: .system)
@@ -29,8 +29,6 @@ final class SubscriptionViewController: UIViewController {
     private let videoView = UIView()
     private var player: AVPlayer?
     private var playerLayer: AVPlayerLayer?
-
-    private var experimentV = String()
 
     // MARK: - Initializer
 
@@ -77,10 +75,6 @@ final class SubscriptionViewController: UIViewController {
 
         termsOfUseLabel.delegate = self
         privacyLabel.delegate = self
-
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-            experimentV = appDelegate.experimentV
-        }
     }
 
     // MARK: - Private methods
@@ -113,20 +107,15 @@ final class SubscriptionViewController: UIViewController {
             restorePurchaseLabel,
             termsOfUseLabel,
             continueButton,
-            exitButton
+            exitButton,
+            benefitsView
         )
-
-        if experimentV == "v2" {
-            view.addSubviews(unlockView)
-        } else {
-            view.addSubviews(benefitsView)
-        }
 
         subImageView.snp.makeConstraints { make in
             make.top.trailing.leading.equalToSuperview()
             make.height.equalTo(UIScreen.main.bounds.height * (414.0 / 844.0))
         }
-        
+
         videoView.snp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
             make.height.equalTo(videoView.snp.width).multipliedBy(1080.0 / 1000.0)
@@ -141,25 +130,13 @@ final class SubscriptionViewController: UIViewController {
             }
         }
 
-        if experimentV == "v2" {
-            unlockView.snp.makeConstraints { make in
-                make.height.equalTo(225)
-                make.leading.trailing.equalToSuperview().inset(16)
-                if UIDevice.isIphoneBelowX {
-                    make.bottom.equalTo(annualView.snp.top).offset(-12)
-                } else {
-                    make.bottom.equalTo(annualView.snp.top).offset(-30)
-                }
-            }
-        } else {
-            benefitsView.snp.makeConstraints { make in
-                make.height.equalTo(214)
-                make.leading.trailing.equalToSuperview().inset(16)
-                if UIDevice.isIphoneBelowX {
-                    make.bottom.equalTo(annualView.snp.top).offset(-12)
-                } else {
-                    make.bottom.equalTo(annualView.snp.top).offset(-42)
-                }
+        benefitsView.snp.makeConstraints { make in
+            make.height.equalTo(214)
+            make.leading.trailing.equalToSuperview().inset(16)
+            if UIDevice.isIphoneBelowX {
+                make.bottom.equalTo(annualView.snp.top).offset(-12)
+            } else {
+                make.bottom.equalTo(annualView.snp.top).offset(-42)
             }
         }
 
@@ -288,7 +265,7 @@ final class SubscriptionViewController: UIViewController {
             }
         }
     }
-    
+
     private func loadPaywallDetails() async {
         await withCheckedContinuation { continuation in
             purchaseManager.loadPaywalls {
@@ -303,7 +280,7 @@ final class SubscriptionViewController: UIViewController {
             let priceString = skProduct.price.stringValue
             let currencySymbol = skProduct.priceLocale.currencySymbol ?? ""
             annualView.updateDetails(title: "Annual", price: "\(currencySymbol)\(priceString)")
-            
+
             if let price = Double(priceString) {
                 let weeklyPrice = price / 52.0
                 let weeklyText = String(format: "\(currencySymbol)%.2f", weeklyPrice)

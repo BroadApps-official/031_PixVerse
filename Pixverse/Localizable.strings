@@ -97,3 +97,11 @@
 "exclusiveEffects" = "Exclusive effects and styles";
 "fullAccessNoLimits" = "Full access with no quantity limits";
 "earlyAccess" = "Early access to in-app updates and new products";
+
+// Token VC
+
+"tokens" = "tokens";
+"moreGenerations" = "Need more\ngenerations?";
+"myTokens" = "My tokens:";
+"buyTokens" = "Buy additional tokens";
+"tokensGenerate" = "Tokens to generate:";

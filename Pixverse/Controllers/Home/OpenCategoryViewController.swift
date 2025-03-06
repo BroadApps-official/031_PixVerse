@@ -6,7 +6,7 @@ import StoreKit
 import UIKit
 import UniformTypeIdentifiers
 
-final class HomeViewController: UIViewController {
+final class OpenCategoryViewController: UIViewController {
     private let purchaseManager = SubscriptionManager()
 
     private var groupedTemplates: [(category: String, templates: [Template])] = []
@@ -15,7 +15,6 @@ final class HomeViewController: UIViewController {
     private var selectedImage: UIImage?
     private var selectedImagePath: String?
     private var generatedURL: String?
-    private let selectButton = GeneralButton()
     private var activeIndexPath: IndexPath?
 
     var activeGenerationCount = 0
@@ -27,7 +26,6 @@ final class HomeViewController: UIViewController {
     }
 
     private var isFirstGeneration: Bool = false
-    private var experimentV = String()
 
     private lazy var actionProgress: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
@@ -35,57 +33,30 @@ final class HomeViewController: UIViewController {
         spinner.hidesWhenStopped = true
         return spinner
     }()
-
+    
     private lazy var collectionView: UICollectionView = {
-        let layout: UICollectionViewLayout = experimentV == "v2" ? createCompositionalLayout() : UICollectionViewFlowLayout()
-
-        if let flowLayout = layout as? UICollectionViewFlowLayout, experimentV == "v1" {
-            flowLayout.scrollDirection = .vertical
-            flowLayout.minimumLineSpacing = 0
-            flowLayout.minimumInteritemSpacing = 0
-            flowLayout.itemSize = CGSize(width: view.frame.width, height: view.frame.height)
-        }
-
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumInteritemSpacing = 8
+        layout.minimumLineSpacing = 8
+        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
-        collectionView.register(EffectCell.self, forCellWithReuseIdentifier: EffectCell.identifier)
         collectionView.register(EffectV2Cell.self, forCellWithReuseIdentifier: EffectV2Cell.identifier)
-        collectionView.register(HeaderView.self,
-                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                withReuseIdentifier: HeaderView.identifier)
         collectionView.dataSource = self
         collectionView.delegate = self
-        if experimentV == "v1" {
-            collectionView.isPagingEnabled = true
-        }
+        collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = false
         return collectionView
     }()
+    
+    init(models: [Template]) {
+        self.templates = models
+        super.init(nibName: nil, bundle: nil)
+    }
 
-    private func createCompositionalLayout() -> UICollectionViewCompositionalLayout {
-        return UICollectionViewCompositionalLayout { _, _ in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(174), heightDimension: .absolute(228))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-            let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(174 * 3), heightDimension: .absolute(228))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-            group.interItemSpacing = .fixed(4)
-
-            let section = NSCollectionLayoutSection(group: group)
-            section.orthogonalScrollingBehavior = .continuous
-            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
-
-            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(56))
-            let header = NSCollectionLayoutBoundarySupplementaryItem(
-                layoutSize: headerSize,
-                elementKind: UICollectionView.elementKindSectionHeader,
-                alignment: .top
-            )
-
-            section.boundarySupplementaryItems = [header]
-            section.interGroupSpacing = 8
-            return section
-        }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
@@ -101,17 +72,21 @@ final class HomeViewController: UIViewController {
         tabBarController?.tabBar.backgroundImage = UIImage()
         tabBarController?.tabBar.shadowImage = UIImage()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(updateTemplates(_:)), name: .templatesUpdated, object: nil)
-
         navigationItem.title = L.home
         if !purchaseManager.hasUnlockedPro {
             setupRightBarButton()
         }
         view.backgroundColor = UIColor.bgPrimary
-
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-            experimentV = appDelegate.experimentV
-        }
+        
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        backButton.setTitle("Back", for: .normal)
+        backButton.tintColor = .white
+        backButton.setTitleColor(.white, for: .normal)
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        
+        let backBarButtonItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = backBarButtonItem
 
         drawSelf()
 
@@ -125,146 +100,28 @@ final class HomeViewController: UIViewController {
                 fetchSingleStatus(for: lastGenerationId)
             }
         }
-
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-            templates = appDelegate.cachedTemplates
-            print("templatestemplates: \(templates)")
-        }
-
+        
         selectedTemplate = templates.first
-        if experimentV == "v1" {
-            navigationItem.title = templates.first?.effect
-        } else {
-            navigationItem.title = L.home
-        }
+        navigationItem.title = templates.first?.categoryTitleEn
         toggleActionProgress()
-
-        if experimentV == "v2" {
-            groupTemplatesByCategory()
-            collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderView.identifier)
-        }
     }
-
+    
+    @objc private func backButtonTapped() {
+        dismiss(animated: true)
+    }
+    
     private func groupTemplatesByCategory() {
         let groupedDict = Dictionary(grouping: templates, by: { $0.categoryTitleEn })
         groupedTemplates = groupedDict.map { ($0.key, $0.value) }.sorted { $0.0 < $1.0 }
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: .templatesUpdated, object: nil)
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        if experimentV == "v1" {
-            let topSafeArea = view.safeAreaInsets.top
-            collectionView.contentInset = UIEdgeInsets(top: -topSafeArea, left: 0, bottom: 0, right: 0)
-        }
-    }
-    
-    @objc private func updateTemplates(_ notification: Notification) {
-        guard let updatedTemplates = notification.object as? [Template] else {
-            print("Error: updatedTemplates is not of type [Template].")
-            return
-        }
-
-        if experimentV == "v2" {
-            var groupedNewTemplates: [(category: String, templates: [Template])] = []
-            for template in updatedTemplates {
-                if let index = groupedNewTemplates.firstIndex(where: { $0.category == template.categoryTitleEn }) {
-                    if let existingTemplate = groupedNewTemplates[index].templates.first(where: { $0.id == template.id }) {
-                        if existingTemplate.preview != template.preview {
-                            groupedNewTemplates[index].templates[index].preview = template.preview
-                            DispatchQueue.main.async {
-                                self.collectionView.reloadData()
-                            }
-                            return
-                        }
-                    } else {
-                        groupedNewTemplates[index].templates.append(template)
-                    }
-                } else {
-                    groupedNewTemplates.append((category: template.categoryTitleEn, templates: [template]))
-                }
-            }
-
-            groupedTemplates = groupedNewTemplates
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
-            }
-        } else {
-            var newTemplates: [Template] = []
-
-            for template in updatedTemplates {
-                if let existingIndex = templates.firstIndex(where: { $0.id == template.id }) {
-                    let existingTemplate = templates[existingIndex]
-
-                    if existingTemplate.preview != template.preview {
-                        templates[existingIndex] = template
-                        DispatchQueue.main.async {
-                            self.collectionView.reloadItems(at: [IndexPath(row: existingIndex, section: 0)])
-                        }
-                    }
-                } else {
-                    newTemplates.append(template)
-                }
-            }
-
-            if !newTemplates.isEmpty {
-                templates.append(contentsOf: newTemplates)
-                let indexPaths = newTemplates.map { template in
-                    IndexPath(row: self.templates.firstIndex(where: { $0.id == template.id })!, section: 0)
-                }
-                DispatchQueue.main.async {
-                    self.collectionView.insertItems(at: indexPaths)
-                }
-            } else {
-                print("No new templates to add.")
-            }
-        }
-
-        toggleActionProgress()
-    }
-
     private func drawSelf() {
-        selectButton.do { make in
-            make.selectMode()
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSelectButton))
-            make.addGestureRecognizer(tapGesture)
-            if experimentV == "v2" {
-                make.isHidden = true
-            } else {
-                make.isHidden = false
-            }
-        }
-
-        if experimentV == "v2" {
-            view.addSubviews(collectionView, actionProgress)
-        } else {
-            view.addSubviews(collectionView, actionProgress, selectButton)
-        }
-
-        if experimentV == "v1" {
-            collectionView.snp.makeConstraints { make in
-                make.leading.trailing.equalToSuperview()
-                make.top.equalToSuperview()
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-            }
-        } else if experimentV == "v2" {
-            collectionView.snp.makeConstraints { make in
-                make.leading.trailing.equalToSuperview()
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-10)
-            }
-        }
-
-        if experimentV == "v1" {
-            selectButton.snp.makeConstraints { make in
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-35)
-                make.trailing.equalToSuperview().inset(16)
-                make.height.equalTo(42)
-                make.width.equalTo(175)
-            }
+        view.addSubviews(collectionView, actionProgress)
+            
+        collectionView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(16)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(24)
+            make.bottom.equalToSuperview()
         }
 
         actionProgress.snp.makeConstraints { make in
@@ -625,10 +482,8 @@ final class HomeViewController: UIViewController {
     private func toggleActionProgress() {
         if templates.isEmpty {
             actionProgress.startAnimating()
-            selectButton.isHidden = true
         } else {
             actionProgress.stopAnimating()
-            selectButton.isHidden = false
         }
     }
 
@@ -708,16 +563,6 @@ final class HomeViewController: UIViewController {
         present(navigationController, animated: true, completion: nil)
     }
 
-    @objc private func didTapSelectButton() {
-        if purchaseManager.hasUnlockedPro {
-            Task {
-                await checkUserTokens()
-            }
-        } else {
-            openSubscription()
-        }
-    }
-
     private func checkUserTokens() async {
         let userId = Apphud.userID()
         let bundle = Bundle.main.bundleIdentifier ?? "com.test.test"
@@ -746,7 +591,7 @@ final class HomeViewController: UIViewController {
 }
 
 // MARK: - UIImagePickerControllerDelegate
-extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension OpenCategoryViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func showImagePickerController(sourceType: UIImagePickerController.SourceType) {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
@@ -809,77 +654,41 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
-extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if experimentV == "v2" {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EffectV2Cell.identifier, for: indexPath) as? EffectV2Cell else {
-                return UICollectionViewCell()
-            }
-            let template = groupedTemplates[indexPath.section].templates[indexPath.item]
-            cell.configure(with: template)
-            return cell
-        } else {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EffectCell.identifier, for: indexPath) as? EffectCell else {
-                return UICollectionViewCell()
-            }
-            let template = templates[indexPath.item]
-            cell.configure(with: template)
-            return cell
-        }
-    }
-
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard kind == UICollectionView.elementKindSectionHeader,
-              let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderView.identifier, for: indexPath) as? HeaderView else {
-            return UICollectionReusableView()
-        }
-
-        let categoryTitle = groupedTemplates[indexPath.section].category
-        header.configure(with: categoryTitle, sectionIndex: indexPath.section)
-        header.delegate = self
-
-        return header
-    }
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        if experimentV == "v2" {
-            return groupedTemplates.count
-        } else {
-            return 1
-        }
-    }
-
+extension OpenCategoryViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if experimentV == "v2" {
-            return groupedTemplates[section].templates.count
-        } else {
-            return templates.count
-        }
+        return templates.count
     }
-
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EffectV2Cell.identifier, for: indexPath) as? EffectV2Cell else {
+            return UICollectionViewCell()
+        }
+        let template = templates[indexPath.item]
+        cell.configure(with: template)
+        return cell
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if experimentV == "v2" {
-            for visibleIndexPath in collectionView.indexPathsForVisibleItems {
-                if let cell = collectionView.cellForItem(at: visibleIndexPath) as? EffectV2Cell {
-                    cell.contentView.layer.borderWidth = 0
-                    cell.contentView.layer.borderColor = nil
-                }
-            }
-
-            if let cell = collectionView.cellForItem(at: indexPath) as? EffectV2Cell {
-                selectedTemplate = templates[indexPath.item]
-            }
-
-            if purchaseManager.hasUnlockedPro {
-                Task {
-                    await checkUserTokens()
-                }
-            } else {
-                openSubscription()
+        for visibleIndexPath in collectionView.indexPathsForVisibleItems {
+            if let cell = collectionView.cellForItem(at: visibleIndexPath) as? EffectV2Cell {
+                cell.contentView.layer.borderWidth = 0
+                cell.contentView.layer.borderColor = nil
             }
         }
-    }
 
+        if let cell = collectionView.cellForItem(at: indexPath) as? EffectV2Cell {
+            selectedTemplate = templates[indexPath.item]
+        }
+
+        if purchaseManager.hasUnlockedPro {
+            Task {
+                await checkUserTokens()
+            }
+        } else {
+            openSubscription()
+        }
+    }
+    
     private func showImageSelectionAlert() {
         let alert = UIAlertController(
             title: L.selectAction,
@@ -929,60 +738,16 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if experimentV == "v1" {
-            return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
-        } else {
-            return CGSize(width: 174, height: 228)
-        }
-    }
-
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let visibleCells = collectionView.indexPathsForVisibleItems
-            .sorted { top, bottom -> Bool in
-                top.section < bottom.section || top.row < bottom.row
-            }
-
-        for indexPath in visibleCells {
-            guard let cell = collectionView.cellForItem(at: indexPath) as? EffectCell else { continue }
-            let cellRect = collectionView.layoutAttributesForItem(at: indexPath)?.frame
-            let isCompletelyVisible = collectionView.bounds.contains(cellRect ?? CGRect.zero)
-
-            if isCompletelyVisible {
-                let template = templates[indexPath.item]
-                selectedTemplate = template
-                if experimentV == "v1" {
-                    navigationItem.title = template.effect
-                } else {
-                    navigationItem.title = L.home
-                }
-                cell.startPlayingVideo()
-            } else {
-                cell.resetVideo()
-            }
-        }
+        let width = (collectionView.frame.width / 2) - 4
+        return CGSize(width: width, height: 228)
     }
 }
-
-// MARK: - HeaderViewDelegate
-extension HomeViewController: HeaderViewDelegate {
-    func didTapHeaderButton(sectionIndex: Int) {
-        let selectedCategory = groupedTemplates[sectionIndex]
-        let openCategoryVC = OpenCategoryViewController(models: selectedCategory.templates)
-        let navigationController = UINavigationController(rootViewController: openCategoryVC)
-        navigationController.modalPresentationStyle = .fullScreen
-        present(navigationController, animated: true, completion: nil)
-    }
-}
-
+    
 // MARK: - ResultViewControllerDelegate
-extension HomeViewController: ResultViewControllerDelegate {
+extension OpenCategoryViewController: ResultViewControllerDelegate {
     func didTapCloseButton() {
         if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
             SKStoreReviewController.requestReview(in: scene)
         }
     }
-}
-
-extension Notification.Name {
-    static let templatesUpdated = Notification.Name("templatesUpdated")
 }

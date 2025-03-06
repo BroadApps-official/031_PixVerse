@@ -38,6 +38,14 @@
 		E759BEDD2C1478D500FC2CCB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E759BEDC2C1478D500FC2CCB /* SceneDelegate.swift */; };
 		E759BEE42C1478D600FC2CCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E759BEE32C1478D600FC2CCB /* Assets.xcassets */; };
 		E75D13E42C6D0D05002A06B4 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75D13E32C6D0D05002A06B4 /* HomeViewController.swift */; };
+		E7638B1F2D77391F00F16812 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7638B1E2D77391F00F16812 /* TokenManager.swift */; };
+		E7638B212D77397200F16812 /* TokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7638B202D77397200F16812 /* TokenViewController.swift */; };
+		E7638B242D7742F600F16812 /* TokenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7638B232D7742F600F16812 /* TokenCell.swift */; };
+		E7638B272D774F8B00F16812 /* MoreGenerationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7638B262D774F8B00F16812 /* MoreGenerationsView.swift */; };
+		E7638B292D779E7F00F16812 /* TokensView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7638B282D779E7F00F16812 /* TokensView.swift */; };
+		E7638B2B2D77C76100F16812 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7638B2A2D77C76100F16812 /* HeaderView.swift */; };
+		E7638B2D2D78838A00F16812 /* EffectV2Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7638B2C2D78838A00F16812 /* EffectV2Cell.swift */; };
+		E7638B2F2D78E2FC00F16812 /* OpenCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7638B2E2D78E2FC00F16812 /* OpenCategoryViewController.swift */; };
 		E78280622D1315EC00AFF803 /* AnnualSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78280612D1315EC00AFF803 /* AnnualSubView.swift */; };
 		E78280642D13184500AFF803 /* WeekSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78280632D13184500AFF803 /* WeekSubView.swift */; };
 		E78D04FA2D133ADA00A40CBB /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E78D04F92D133ADA00A40CBB /* SnapKit */; };
@@ -96,6 +104,14 @@
 		E759BEE32C1478D600FC2CCB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E759BEE82C1478D600FC2CCB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E75D13E32C6D0D05002A06B4 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		E7638B1E2D77391F00F16812 /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
+		E7638B202D77397200F16812 /* TokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenViewController.swift; sourceTree = "<group>"; };
+		E7638B232D7742F600F16812 /* TokenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenCell.swift; sourceTree = "<group>"; };
+		E7638B262D774F8B00F16812 /* MoreGenerationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreGenerationsView.swift; sourceTree = "<group>"; };
+		E7638B282D779E7F00F16812 /* TokensView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokensView.swift; sourceTree = "<group>"; };
+		E7638B2A2D77C76100F16812 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		E7638B2C2D78838A00F16812 /* EffectV2Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectV2Cell.swift; sourceTree = "<group>"; };
+		E7638B2E2D78E2FC00F16812 /* OpenCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenCategoryViewController.swift; sourceTree = "<group>"; };
 		E78280612D1315EC00AFF803 /* AnnualSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnualSubView.swift; sourceTree = "<group>"; };
 		E78280632D13184500AFF803 /* WeekSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekSubView.swift; sourceTree = "<group>"; };
 		E78D05212D14417600A40CBB /* Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localized.swift; sourceTree = "<group>"; };
@@ -172,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				E71D00742CE3676C0011C8AF /* SubscriptionManager.swift */,
+				E7638B1E2D77391F00F16812 /* TokenManager.swift */,
 			);
 			path = Payment;
 			sourceTree = "<group>";
@@ -213,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				E74EF7C92D1197B6003ECCEC /* UpgradeSettingsView.swift */,
+				E7638B282D779E7F00F16812 /* TokensView.swift */,
 				E74EF7C72D119629003ECCEC /* NotificationSettingsView.swift */,
 				E74EF7CB2D1198ED003ECCEC /* RateSettingsView.swift */,
 				E74EF7CD2D119A87003ECCEC /* ContactSettingsView.swift */,
@@ -271,12 +289,39 @@
 				E75D13E32C6D0D05002A06B4 /* HomeViewController.swift */,
 				E7A153752CECEC06002A7A36 /* GenerationTimeViewController.swift */,
 				E7A153772CEE1C5D002A7A36 /* ResultViewController.swift */,
+				E7638B2E2D78E2FC00F16812 /* OpenCategoryViewController.swift */,
 				E7B113A92C14B05A00E96820 /* View */,
 				E7E1CA372C6E46C60092368E /* Cell */,
 				E74EF7C42D118BDC003ECCEC /* Models */,
 				E78943DC2CE4C3E9009B3C4E /* Animation */,
 			);
 			path = Home;
+			sourceTree = "<group>";
+		};
+		E7638B1D2D7606FB00F16812 /* Token */ = {
+			isa = PBXGroup;
+			children = (
+				E7638B202D77397200F16812 /* TokenViewController.swift */,
+				E7638B222D7742E300F16812 /* Cell */,
+				E7638B252D774F3A00F16812 /* View */,
+			);
+			path = Token;
+			sourceTree = "<group>";
+		};
+		E7638B222D7742E300F16812 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				E7638B232D7742F600F16812 /* TokenCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		E7638B252D774F3A00F16812 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E7638B262D774F8B00F16812 /* MoreGenerationsView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		E78943DC2CE4C3E9009B3C4E /* Animation */ = {
@@ -345,6 +390,7 @@
 		E7B113A62C14B00E00E96820 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				E7638B1D2D7606FB00F16812 /* Token */,
 				E7B1142D2C1B2FD800E96820 /* LaunchScreen */,
 				E7B113A72C14B02100E96820 /* Onbording */,
 				E73FD5502CCA8C4200F7C940 /* Subscription */,
@@ -423,6 +469,8 @@
 			isa = PBXGroup;
 			children = (
 				E7A153512CEC9388002A7A36 /* EffectCell.swift */,
+				E7638B2A2D77C76100F16812 /* HeaderView.swift */,
+				E7638B2C2D78838A00F16812 /* EffectV2Cell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -552,14 +600,17 @@
 				E74EF7C82D119629003ECCEC /* NotificationSettingsView.swift in Sources */,
 				E74EF7CE2D119A87003ECCEC /* ContactSettingsView.swift in Sources */,
 				E7B113982C149CC000E96820 /* OnboardingViewController.swift in Sources */,
+				E7638B212D77397200F16812 /* TokenViewController.swift in Sources */,
 				E73FD5522CCAA1CD00F7C940 /* SubscriptionViewController.swift in Sources */,
 				E7A153842CEF6B25002A7A36 /* NoAnimationView.swift in Sources */,
 				E71D00752CE3676C0011C8AF /* SubscriptionManager.swift in Sources */,
 				E74EF7CC2D1198EE003ECCEC /* RateSettingsView.swift in Sources */,
 				E7B113A12C14AF0800E96820 /* Do.swift in Sources */,
+				E7638B2F2D78E2FC00F16812 /* OpenCategoryViewController.swift in Sources */,
 				E7B113AB2C14B06300E96820 /* GeneralButton.swift in Sources */,
 				E78D05222D14417600A40CBB /* Localized.swift in Sources */,
 				E73FD54F2CCA68E200F7C940 /* UIFontExtention.swift in Sources */,
+				E7638B2B2D77C76100F16812 /* HeaderView.swift in Sources */,
 				E73FD55B2CCAFE3D00F7C940 /* SFTermsOfUse.swift in Sources */,
 				E7A153812CEF4654002A7A36 /* CacheManager.swift in Sources */,
 				E73FD55D2CCAFEB800F7C940 /* SFRestrorePurchaseLabel.swift in Sources */,
@@ -568,21 +619,26 @@
 				E73FD5592CCAFAD700F7C940 /* SFPrivacyLabel.swift in Sources */,
 				E78D054D2D1B7E6B00A40CBB /* UIImageExtention.swift in Sources */,
 				E7A153522CEC9388002A7A36 /* EffectCell.swift in Sources */,
+				E7638B242D7742F600F16812 /* TokenCell.swift in Sources */,
 				E7B113BA2C14C35200E96820 /* TabBarController.swift in Sources */,
 				E73FD5692CCD215200F7C940 /* SettingsViewController.swift in Sources */,
 				E73FD5572CCAC2E900F7C940 /* SubscribeView.swift in Sources */,
 				E75D13E42C6D0D05002A06B4 /* HomeViewController.swift in Sources */,
 				E78280622D1315EC00AFF803 /* AnnualSubView.swift in Sources */,
 				E7B1139E2C14AED600E96820 /* UIColorExtension.swift in Sources */,
+				E7638B2D2D78838A00F16812 /* EffectV2Cell.swift in Sources */,
 				E7B113A52C14AF5D00E96820 /* UIStackViewExtension.swift in Sources */,
 				E78280642D13184500AFF803 /* WeekSubView.swift in Sources */,
 				E7A153762CECEC06002A7A36 /* GenerationTimeViewController.swift in Sources */,
+				E7638B272D774F8B00F16812 /* MoreGenerationsView.swift in Sources */,
 				E7B370B82D3FBD760059F056 /* UnlockView.swift in Sources */,
 				E74EF7D02D119B56003ECCEC /* PrivacySettingsView.swift in Sources */,
 				E759BEDB2C1478D500FC2CCB /* AppDelegate.swift in Sources */,
 				E7A153502CEBAEF1002A7A36 /* NetworkService.swift in Sources */,
 				E759BEDD2C1478D500FC2CCB /* SceneDelegate.swift in Sources */,
 				E71D00432CDC546E0011C8AF /* VideoSaver.swift in Sources */,
+				E7638B1F2D77391F00F16812 /* TokenManager.swift in Sources */,
+				E7638B292D779E7F00F16812 /* TokensView.swift in Sources */,
 				E7B1139A2C14AE2B00E96820 /* OnboardingPageViewController.swift in Sources */,
 				E7A1537F2CEF42E5002A7A36 /* AnimationCell.swift in Sources */,
 				E7B370BA2D3FFBE30059F056 /* ArratExtention.swift in Sources */,

@@ -3,11 +3,14 @@ import Foundation
 // MARK: - NetworkService
 final class NetworkService {
     static let shared = NetworkService()
+    
+    private let baseURL = "https://vewapnew.online/api/user"
+    private let bearerToken = "rE176kzVVqjtWeGToppo4lRcbz3HRLoBrZREEvgQ8fKdWuxySCw6tv52BdLKBkZTOHWda5ISwLUVTyRoZEF0A33Xpk63lF9wTCtDxOs8XK3YArAiqIXVb7ZS4IK61TYPQMu5WqzFWwXtZc1jo8w"
 
     private init() {}
 
     func fetchEffects(forApp appName: String, completionHandler: @escaping (Result<[Template], Error>) -> Void) {
-        guard let baseUrl = URL(string: "https://testingerapp.site/api/templates") else {
+        guard let baseUrl = URL(string: "https://vewapnew.online/api/templatesByCategories") else {
             print("Failed to create base URL")
             completionHandler(.failure(NetworkError.invalidURL))
             return
@@ -62,10 +65,9 @@ final class NetworkService {
                 if decodedResponse.error {
                     completionHandler(.failure(NetworkError.apiError))
                 } else {
-                    if decodedResponse.data.isEmpty {
-                        print("Received empty template list")
-                    }
-                    completionHandler(.success(decodedResponse.data))
+                    let allTemplates = decodedResponse.data.flatMap { $0.templates }
+                    print("Parsed templates: \(allTemplates)")
+                    completionHandler(.success(allTemplates))
                 }
             } catch {
                 print("Failed to decode response: \(error)")
@@ -229,6 +231,64 @@ final class NetworkService {
             }
         }
         task.resume()
+    }
+}
+
+// MARK: - Tokens
+extension NetworkService {
+    // MARK: - Get User Tokens
+    func getUserTokens(userId: String, bundleId: String) async throws -> Int {
+        guard var urlComponents = URLComponents(string: baseURL) else {
+            throw URLError(.badURL)
+        }
+        
+        urlComponents.queryItems = [
+            URLQueryItem(name: "userId", value: userId),
+            URLQueryItem(name: "bundleId", value: bundleId)
+        ]
+        
+        guard let url = urlComponents.url else {
+            throw URLError(.badURL)
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+            throw NSError(domain: "", code: -3, userInfo: [NSLocalizedDescriptionKey: "Invalid JSON format"])
+        }
+
+        guard let data = json["data"] as? [String: Any],
+              let availableGenerations = data["availableGenerations"] as? Int else {
+            throw NSError(domain: "", code: -3, userInfo: [NSLocalizedDescriptionKey: "Missing 'availableGenerations' field in response"])
+        }
+
+        return availableGenerations
+    }
+    
+    // MARK: - Buy Tokens
+    func buyTokens(userId: String, bundleId: String, generations: Int) async throws {
+        guard let url = URL(string: baseURL) else {
+            throw URLError(.badURL)
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "userId": userId,
+            "bundleId": bundleId,
+            "generations": generations
+        ]
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+        
+        _ = try await URLSession.shared.data(for: request)
     }
 }
 

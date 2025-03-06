@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         return true
     }
-
+    
     private func preloadTemplates() {
         let savedTemplates = CacheManager.shared.loadAllTemplatesFromCache()
         cachedTemplates = savedTemplates
@@ -54,7 +54,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             switch result {
             case let .success(templates):
                 guard let self = self else { return }
-                var updatedTemplates: [Template] = []
 
                 Task {
                     for serverTemplate in templates {
@@ -64,14 +63,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                     let videoURL = try await self.downloadAndSaveVideo(for: serverTemplate)
                                     var updatedTemplate = serverTemplate
                                     updatedTemplate.localVideoName = videoURL?.lastPathComponent
-                                    updatedTemplates.append(updatedTemplate)
-                                    print("Updated template \(serverTemplate.id) with new preview.")
+                                    if let index = self.cachedTemplates.firstIndex(where: { $0.id == serverTemplate.id }) {
+                                        self.cachedTemplates[index] = updatedTemplate
+                                    }
                                 } catch {
                                     print("Error updating video for template \(serverTemplate.id): \(error.localizedDescription)")
-                                    updatedTemplates.append(cachedTemplate)
                                 }
                             } else {
-                                updatedTemplates.append(cachedTemplate)
                                 print("Template \(serverTemplate.id) matches cached model. No update needed.")
                             }
                         } else {
@@ -80,7 +78,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                     let videoURL = try await self.downloadAndSaveVideo(for: serverTemplate)
                                     var newTemplate = serverTemplate
                                     newTemplate.localVideoName = videoURL?.lastPathComponent
-                                    updatedTemplates.append(newTemplate)
+                                    self.cachedTemplates.append(newTemplate)
+                                    
                                     print("Added new template \(serverTemplate.id).")
                                 } catch {
                                     print("Error downloading video for new template \(serverTemplate.id): \(error.localizedDescription)")
@@ -88,10 +87,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             }
                         }
 
-                        self.cachedTemplates = updatedTemplates
-                        CacheManager.shared.saveTemplateToCache(updatedTemplates)
+                        CacheManager.shared.saveTemplateToCache(self.cachedTemplates)
                         DispatchQueue.main.async {
-                            NotificationCenter.default.post(name: .templatesUpdated, object: updatedTemplates)
+                            NotificationCenter.default.post(name: .templatesUpdated, object: self.cachedTemplates)
                         }
                     }
                 }
@@ -141,7 +139,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
 
             if let data = data, let responseString = String(data: data, encoding: .utf8) {
-                print("Response Data: \(responseString)")
+                print("Response Data v: \(responseString)")
             } else {
                 print("No data in response")
             }
@@ -154,16 +152,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             do {
                 if let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: String]] {
                     for experiment in jsonArray {
-                        if let code = experiment["code"], code == "payexp",
+                        if let code = experiment["code"], code == "efcts_person",
                            let segment = experiment["segment"] {
-                            self.experimentV = segment
-                            print("Paywalls Segment: \(self.experimentV)")
+                            DispatchQueue.main.async {
+                                self.experimentV = segment
+                                print("Paywalls Segment: \(self.experimentV)")
+                            }
                             break
                         }
                     }
                 }
             } catch {
-                print("Failed to parse JSON: \(error)")
+                print("Failed to parse JSON v: \(error)")
             }
         }
         task.resume()

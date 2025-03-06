@@ -1,23 +1,23 @@
 import SnapKit
 import UIKit
 
-protocol UpgradeSettingsViewDelegate: AnyObject {
-    func didTapUpgradeView()
+protocol TokensViewDelegate: AnyObject {
+    func didTapTokensView()
 }
 
-final class UpgradeSettingsView: UIControl {
-    weak var delegate: UpgradeSettingsViewDelegate?
+final class TokensView: UIControl {
+    weak var delegate: TokensViewDelegate?
 
     private let buttonBackgroundView = UIButton(type: .system)
-    private let typeImageView = UIImageView()
+    private let arrowImageView = UIImageView()
     private let titleLabel = UILabel()
-    private let premiumSubLabel = UILabel()
+    private let subLabel = UILabel()
 
     private var observation: NSKeyValueObservation?
 
     // MARK: - Init
 
-    init(delegate: UpgradeSettingsViewDelegate) {
+    init(delegate: TokensViewDelegate) {
         self.delegate = delegate
 
         super.init(frame: .zero)
@@ -44,52 +44,54 @@ final class UpgradeSettingsView: UIControl {
             titleLabel.textColor = newValue ? .white.withAlphaComponent(0.7) : .white
         })
 
-        typeImageView.image = UIImage(named: "set_upgrade_icon")
-        typeImageView.contentMode = .scaleAspectFit
+        arrowImageView.image = UIImage(named: "token_arrow_image")
+        arrowImageView.contentMode = .scaleAspectFit
         buttonBackgroundView.isUserInteractionEnabled = true
 
         titleLabel.do { make in
             make.textColor = UIColor.labelsPrimary
-            make.font = UIFont.CustomFont.title3Semobold
-            make.text = L.subscriptionDetails
+            make.font = UIFont.CustomFont.calloutSemibold
+            make.text = L.tokensGenerate
         }
 
-        premiumSubLabel.do { make in
-            make.textColor = .white.withAlphaComponent(0.5)
-            make.font = UIFont.CustomFont.footnoteRegular
-            make.text = L.subscriptionDetailsSublabel
-            make.numberOfLines = 0
+        subLabel.do { make in
+            make.textColor = UIColor.labelsPrimary
+            make.font = UIFont.CustomFont.calloutSemibold
+            make.text = ""
         }
 
         addSubviews(buttonBackgroundView)
         buttonBackgroundView.addSubview(titleLabel)
-        buttonBackgroundView.addSubview(typeImageView)
-        buttonBackgroundView.addSubview(premiumSubLabel)
+        buttonBackgroundView.addSubview(subLabel)
+        buttonBackgroundView.addSubview(arrowImageView)
 
         buttonBackgroundView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
 
-        typeImageView.snp.makeConstraints { make in
-            make.top.trailing.equalToSuperview().inset(16)
-        }
-
         titleLabel.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview().offset(16)
-            make.height.equalTo(25)
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(16)
         }
         
-        premiumSubLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(6)
-            make.leading.equalToSuperview().offset(16)
-            make.width.equalTo(200)
-            make.height.equalTo(36)
+        subLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(titleLabel.snp.trailing).offset(10)
         }
+        
+        arrowImageView.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(8)
+            make.centerY.equalToSuperview()
+        }
+    }
+    
+    func tokensValue(value: Int) {
+        subLabel.text = "\(value * 10) / 2000"
     }
 
     // MARK: - Actions
 
     @objc private func didTapView() {
-        delegate?.didTapUpgradeView()
+        delegate?.didTapTokensView()
     }
 }

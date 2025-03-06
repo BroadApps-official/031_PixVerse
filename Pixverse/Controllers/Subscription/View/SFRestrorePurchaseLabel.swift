@@ -13,9 +13,13 @@ class SFRestrorePurchaseLabel: UILabel {
     }
 
     private let purchaseManager = SubscriptionManager()
+    private let tokenManager = TokenManager()
     weak var delegate: SFRestrorePurchaseLabelDelegate?
 
-    init() {
+    private var isToken: Bool
+
+    init(isToken: Bool) {
+        self.isToken = isToken
         super.init(frame: .zero)
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .center
@@ -55,12 +59,23 @@ class SFRestrorePurchaseLabel: UILabel {
             self?.alpha = 1.0
         }
 
-        purchaseManager.restorePurchase { success in
-            if success {
-                debugPrint("restorePurchase succeed.")
-            } else {
-                debugPrint("restorePurchase failed.")
-                self.delegate?.didFailToRestorePurchases()
+        if isToken {
+            tokenManager.restorePurchase { success in
+                if success {
+                    debugPrint("restorePurchase succeed.")
+                } else {
+                    debugPrint("restorePurchase failed.")
+                    self.delegate?.didFailToRestorePurchases()
+                }
+            }
+        } else {
+            purchaseManager.restorePurchase { success in
+                if success {
+                    debugPrint("restorePurchase succeed.")
+                } else {
+                    debugPrint("restorePurchase failed.")
+                    self.delegate?.didFailToRestorePurchases()
+                }
             }
         }
     }

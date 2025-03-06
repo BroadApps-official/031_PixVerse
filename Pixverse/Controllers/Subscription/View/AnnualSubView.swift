@@ -28,7 +28,6 @@ final class AnnualSubView: UIControl {
     var dynamicTitle: String?
     var dynamicPrice: String?
 
-    private var experimentV = String()
     private let weekLabel = UILabel()
     private let weekValueLabel = UILabel()
 
@@ -37,10 +36,6 @@ final class AnnualSubView: UIControl {
         setupView()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         addGestureRecognizer(tapGesture)
-
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-            experimentV = appDelegate.experimentV
-        }
     }
 
     required init?(coder: NSCoder) {
@@ -82,26 +77,15 @@ final class AnnualSubView: UIControl {
         underTitleLabel.do { make in
             make.text = "$0.77 per week"
             make.textAlignment = .center
-
-            if experimentV == "v2" {
-                make.font = UIFont.CustomFont.bodyEmphasized
-                make.textColor = UIColor.labelsPrimary
-            } else {
-                make.textColor = UIColor.labelsSecondary
-                make.font = UIFont.CustomFont.caption1Regular
-            }
+            make.textColor = UIColor.labelsSecondary
+            make.font = UIFont.CustomFont.caption1Regular
         }
 
         priceLabel.do { make in
             make.text = "$39.99"
             make.textAlignment = .center
-            if experimentV == "v2" {
-                make.font = UIFont.CustomFont.caption1Regular
-                make.textColor = UIColor.labelsQuaternary
-            } else {
-                make.font = UIFont.CustomFont.bodyEmphasized
-                make.textColor = UIColor.labelsPrimary
-            }
+            make.font = UIFont.CustomFont.bodyEmphasized
+            make.textColor = UIColor.labelsPrimary
         }
 
         underPriceLabel.do { make in
@@ -125,16 +109,10 @@ final class AnnualSubView: UIControl {
             make.distribution = .fill
         }
 
-        if experimentV == "v2" {
-            titleStackView.addArrangedSubviews([titleLabel, priceLabel])
-            saveImageView.addSubviews(saveLabel)
-            addSubviews(containerView, circleImageView, titleStackView, weekLabel, underTitleLabel, saveImageView)
-        } else {
-            titleStackView.addArrangedSubviews([titleLabel, underTitleLabel])
-            priceStackView.addArrangedSubviews([priceLabel, underPriceLabel])
-            saveImageView.addSubviews(saveLabel)
-            addSubviews(containerView, circleImageView, titleStackView, priceStackView, saveImageView)
-        }
+        titleStackView.addArrangedSubviews([titleLabel, underTitleLabel])
+        priceStackView.addArrangedSubviews([priceLabel, underPriceLabel])
+        saveImageView.addSubviews(saveLabel)
+        addSubviews(containerView, circleImageView, titleStackView, priceStackView, saveImageView)
 
         containerView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -150,32 +128,15 @@ final class AnnualSubView: UIControl {
             make.centerY.equalToSuperview()
             make.leading.equalTo(circleImageView.snp.trailing).offset(8)
         }
-
-        if experimentV == "v2" {
-            weekLabel.snp.makeConstraints { make in
-                make.centerY.equalToSuperview()
-                make.trailing.equalToSuperview().inset(15)
-            }
-
-            underTitleLabel.snp.makeConstraints { make in
-                make.centerY.equalToSuperview()
-                make.trailing.equalTo(weekLabel.snp.leading).offset(-2)
-            }
-        } else {
-            priceStackView.snp.makeConstraints { make in
-                make.trailing.equalToSuperview().inset(16)
-                make.centerY.equalToSuperview()
-            }
+        
+        priceStackView.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(16)
+            make.centerY.equalToSuperview()
         }
 
         saveImageView.snp.makeConstraints { make in
-            if experimentV == "v2" {
-                make.top.equalToSuperview().offset(-11)
-                make.trailing.equalToSuperview().offset(-16)
-            } else {
-                make.top.equalToSuperview().offset(8.5)
-                make.trailing.equalTo(priceLabel.snp.leading).offset(-6)
-            }
+            make.top.equalToSuperview().offset(8.5)
+            make.trailing.equalTo(priceLabel.snp.leading).offset(-6)
         }
 
         saveLabel.snp.makeConstraints { make in
@@ -185,13 +146,8 @@ final class AnnualSubView: UIControl {
 
     private func configureAppearance() {
         if isSelected {
-            if experimentV == "v2" {
-                circleImageView.image = UIImage(named: "sub_circle_fill_v2")
-                containerView.layer.borderColor = UIColor(hex: "#A769FF").cgColor
-            } else {
-                circleImageView.image = UIImage(named: "sub_circle_fill")
-                containerView.layer.borderColor = UIColor.colorsSecondary.cgColor
-            }
+            circleImageView.image = UIImage(named: "sub_circle_fill")
+            containerView.layer.borderColor = UIColor.colorsSecondary.cgColor
             containerView.layer.borderWidth = 1
         } else {
             containerView.layer.borderColor = UIColor.clear.cgColor
@@ -211,11 +167,7 @@ final class AnnualSubView: UIControl {
     }
 
     func updateUnderTitleLabel(text: String) {
-        if experimentV == "v2" {
-            underTitleLabel.text = text
-        } else {
-            underTitleLabel.text = "\(text) per week"
-        }
+        underTitleLabel.text = "\(text) per week"
     }
 
     // MARK: - Actions

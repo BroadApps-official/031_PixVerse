@@ -48,50 +48,61 @@ final class CacheManager {
     }
 
     func saveVideo(for template: Template, completion: @escaping (Result<URL, Error>) -> Void) {
-        print("Starting to save video for template with ID: \(template.id)")
+        guard !template.preview.isEmpty, let videoURL = URL(string: template.preview) else {
+            let invalidURLError = NSError(domain: "Invalid URL", code: 400, userInfo: nil)
+            completion(.failure(invalidURLError))
+            return
+        }
 
-        if !template.preview.isEmpty, let videoURL = URL(string: template.preview) {
-            let videoFileURL = videoCacheDirectory.appendingPathComponent("\(template.id).mp4")
+        let videoFileURL = videoCacheDirectory.appendingPathComponent("\(template.id).mp4")
+        let tempVideoURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID().uuidString).mp4")
+        let cachedPreviewKey = "cached_preview_\(template.id)"
+        let cachedPreview = UserDefaults.standard.string(forKey: cachedPreviewKey)
 
-            print("Video URL for template: \(videoURL)")
-            print("Video file URL in cache: \(videoFileURL)")
+        if let cachedPreview, cachedPreview != template.preview {
+            let oldVideoBackupURL = videoCacheDirectory.appendingPathComponent("\(template.id)_old.mp4")
 
-            if fileManager.fileExists(atPath: videoFileURL.path) {
-                print("Video already exists in cache. Returning cached file.")
-                completion(.success(videoFileURL))
+            do {
+                if fileManager.fileExists(atPath: videoFileURL.path) {
+                    try fileManager.moveItem(at: videoFileURL, to: oldVideoBackupURL)
+                }
+                UserDefaults.standard.set(template.preview, forKey: cachedPreviewKey)
+            } catch {
+                print("Error renaming old video: \(error.localizedDescription)")
+            }
+        } else if fileManager.fileExists(atPath: videoFileURL.path) {
+            completion(.success(videoFileURL))
+            return
+        } else {
+            UserDefaults.standard.set(template.preview, forKey: cachedPreviewKey)
+        }
+
+        URLSession.shared.downloadTask(with: videoURL) { [weak self] location, _, error in
+            guard let self = self else { return }
+
+            if let error = error {
+                completion(.failure(error))
                 return
             }
 
-            print("Downloading video from URL: \(videoURL)")
-            URLSession.shared.downloadTask(with: videoURL) { [weak self] location, _, error in
-                if let error = error {
-                    print("Error downloading video: \(error.localizedDescription)")
-                    completion(.failure(error))
-                    return
-                }
+            guard let location = location else {
+                let downloadError = NSError(domain: "Download error", code: 404, userInfo: nil)
+                completion(.failure(downloadError))
+                return
+            }
 
-                guard let location = location else {
-                    let downloadError = NSError(domain: "Download error", code: 404, userInfo: nil)
-                    completion(.failure(downloadError))
-                    return
+            do {
+                try self.fileManager.moveItem(at: location, to: tempVideoURL)
+                if self.fileManager.fileExists(atPath: videoFileURL.path) {
+                    try self.fileManager.removeItem(at: videoFileURL)
                 }
+                try self.fileManager.moveItem(at: tempVideoURL, to: videoFileURL)
 
-                print("Download completed, moving video to cache...")
-
-                do {
-                    try self?.fileManager.moveItem(at: location, to: videoFileURL)
-                    print("Video successfully saved to cache at path: \(videoFileURL.path)")
-                    completion(.success(videoFileURL))
-                } catch {
-                    print("Error moving downloaded video to cache: \(error.localizedDescription)")
-                    completion(.failure(error))
-                }
-            }.resume()
-        } else {
-            print("Invalid URL for template with ID: \(template.id)")
-            let invalidURLError = NSError(domain: "Invalid URL", code: 400, userInfo: nil)
-            completion(.failure(invalidURLError))
-        }
+                completion(.success(videoFileURL))
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
     }
 
     func loadVideo(for template: Template, completion: @escaping (Result<URL, Error>) -> Void) {

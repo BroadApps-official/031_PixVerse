@@ -23,7 +23,6 @@ final class WeekSubView: UIControl {
     var dynamicTitle: String?
     var dynamicPrice: String?
 
-    private var experimentV = String()
     private let weekLabel = UILabel()
     private let weekValueLabel = UILabel()
 
@@ -32,10 +31,6 @@ final class WeekSubView: UIControl {
         setupView()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         addGestureRecognizer(tapGesture)
-
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-            experimentV = appDelegate.experimentV
-        }
     }
 
     required init?(coder: NSCoder) {
@@ -87,12 +82,8 @@ final class WeekSubView: UIControl {
             make.distribution = .fill
         }
 
-        if experimentV == "v2" {
-            addSubviews(containerView, circleImageView, titleLabel, weekLabel, priceLabel)
-        } else {
-            priceStackView.addArrangedSubviews([priceLabel, underPriceLabel])
-            addSubviews(containerView, circleImageView, titleLabel, priceStackView)
-        }
+        priceStackView.addArrangedSubviews([priceLabel, underPriceLabel])
+        addSubviews(containerView, circleImageView, titleLabel, priceStackView)
 
         containerView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -109,33 +100,16 @@ final class WeekSubView: UIControl {
             make.leading.equalTo(circleImageView.snp.trailing).offset(8)
         }
 
-        if experimentV == "v2" {
-            weekLabel.snp.makeConstraints { make in
-                make.centerY.equalToSuperview()
-                make.trailing.equalToSuperview().inset(15)
-            }
-
-            priceLabel.snp.makeConstraints { make in
-                make.centerY.equalToSuperview()
-                make.trailing.equalTo(weekLabel.snp.leading).offset(-2)
-            }
-        } else {
-            priceStackView.snp.makeConstraints { make in
-                make.trailing.equalToSuperview().inset(16)
-                make.centerY.equalToSuperview()
-            }
+        priceStackView.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(16)
+            make.centerY.equalToSuperview()
         }
     }
 
     private func configureAppearance() {
         if isSelected {
-            if experimentV == "v2" {
-                circleImageView.image = UIImage(named: "sub_circle_fill_v2")
-                containerView.layer.borderColor = UIColor(hex: "#A769FF").cgColor
-            } else {
-                circleImageView.image = UIImage(named: "sub_circle_fill")
-                containerView.layer.borderColor = UIColor.colorsSecondary.cgColor
-            }
+            circleImageView.image = UIImage(named: "sub_circle_fill")
+            containerView.layer.borderColor = UIColor.colorsSecondary.cgColor
             containerView.layer.borderWidth = 1
         } else {
             containerView.layer.borderColor = UIColor.clear.cgColor

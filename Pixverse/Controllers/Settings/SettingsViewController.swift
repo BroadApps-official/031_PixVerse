@@ -28,6 +28,7 @@ final class SettingsViewController: UIViewController {
     private lazy var contactView = ContactSettingsView(delegate: self)
     private lazy var privacyPolicyView = PrivacySettingsView(delegate: self)
     private lazy var usagePolicyView = UsageSettingsView(delegate: self)
+    private lazy var tokensView = TokensView(delegate: self)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +51,35 @@ final class SettingsViewController: UIViewController {
         scrollView.showsVerticalScrollIndicator = false
 
         configureConstraints()
+        
+        Task {
+            await tokenCount()
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        Task {
+            await tokenCount()
+        }
+    }
+    
+    private func tokenCount() async {
+        let userId = Apphud.userID()
+        let bundle = Bundle.main.bundleIdentifier ?? "com.test.test"
+
+        do {
+            let updatedTokens = try await NetworkService.shared.getUserTokens(
+                userId: userId,
+                bundleId: bundle
+            )
+
+            DispatchQueue.main.async {
+                self.tokensView.tokensValue(value: updatedTokens)
+            }
+        } catch {
+            print("Token error: \(error.localizedDescription)")
+        }
     }
 
     private func drawSelf() {
@@ -63,6 +93,8 @@ final class SettingsViewController: UIViewController {
              privacyPolicyView, usagePolicyView,
              notificationsView]
         )
+        
+        upgradeView.addSubviews(tokensView)
 
         scrollView.addSubviews(contentView)
 
@@ -88,7 +120,7 @@ final class SettingsViewController: UIViewController {
         stackView.snp.makeConstraints { make in
             make.top.equalTo(contentView.snp.top).offset(24)
             make.trailing.leading.equalToSuperview().inset(16)
-            make.height.equalTo(546)
+            make.height.equalTo(610)
         }
 
         [rateView, contactView,
@@ -99,7 +131,12 @@ final class SettingsViewController: UIViewController {
         }
 
         upgradeView.snp.makeConstraints { make in
-            make.height.equalTo(99)
+            make.height.equalTo(163)
+        }
+        
+        tokensView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview().inset(16)
+            make.height.equalTo(52)
         }
 
         notificationsView.snp.makeConstraints { make in
@@ -121,6 +158,15 @@ extension SettingsViewController: UpgradeSettingsViewDelegate {
         let subscriptionVC = SubscriptionViewController(isFromOnboarding: false, isExitShown: false)
         subscriptionVC.modalPresentationStyle = .fullScreen
         present(subscriptionVC, animated: true, completion: nil)
+    }
+}
+
+// MARK: - UpgradeSettingsViewDelegate
+extension SettingsViewController: TokensViewDelegate {
+    func didTapTokensView() {
+        let tokensVC = TokenViewController()
+        tokensVC.modalPresentationStyle = .fullScreen
+        present(tokensVC, animated: true, completion: nil)
     }
 }
 

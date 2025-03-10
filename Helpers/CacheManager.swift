@@ -122,23 +122,6 @@ final class CacheManager {
         }
     }
 
-    func loadPreview(for template: Template, completion: @escaping (Result<URL, Error>) -> Void) {
-        let videoFileURL = videoCacheDirectory.appendingPathComponent("\(template.id)_preview.mp4")
-
-        if fileManager.fileExists(atPath: videoFileURL.path) {
-            completion(.success(videoFileURL))
-        } else {
-            saveVideo(for: template) { result in
-                switch result {
-                case let .success(url):
-                    completion(.success(url))
-                case let .failure(error):
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
-
     func saveTemplateToCache(_ templates: [Template]) {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted

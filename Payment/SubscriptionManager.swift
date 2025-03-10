@@ -11,12 +11,12 @@ class SubscriptionManager: NSObject {
         super.init()
     }
 
-    // MARK: - Возврат true при наличии подписки
+    // MARK: - Subscription Check
     var hasUnlockedPro: Bool {
         return Apphud.hasPremiumAccess()
     }
 
-    // MARK: - Начало оплаты
+    // MARK: - Subscription Purchase
     @MainActor func startPurchase(produst: ApphudProduct, escaping: @escaping (Bool) -> Void) {
         let selectedProduct = produst
         Apphud.purchase(selectedProduct) { result in
@@ -37,7 +37,7 @@ class SubscriptionManager: NSObject {
         }
     }
 
-    // MARK: - vосстановление покупок
+    // MARK: - Restore Purchase
     @MainActor func restorePurchase(escaping: @escaping (Bool) -> Void) {
         Apphud.restorePurchases { subscriptions, _, error in
             if let error = error {
@@ -55,7 +55,7 @@ class SubscriptionManager: NSObject {
         }
     }
 
-    // MARK: - загрузка продуктов с эппхад
+    // MARK: - Load Subscription
     @MainActor
     func loadPaywalls(completion: @escaping () -> Void) {
         Apphud.paywallsDidLoadCallback { paywalls, _ in

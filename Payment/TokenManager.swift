@@ -11,12 +11,12 @@ class TokenManager: NSObject {
         super.init()
     }
 
-    // MARK: - Возврат true при наличии подписки
+    // MARK: - Token Check
     var hasUnlockedPro: Bool {
         return Apphud.hasPremiumAccess()
     }
 
-    // MARK: - Начало оплаты
+    // MARK: - Token Purchase
     @MainActor func startPurchase(produst: ApphudProduct, escaping: @escaping (Bool) -> Void) {
         let selectedProduct = produst
         Apphud.purchase(selectedProduct) { result in
@@ -37,7 +37,7 @@ class TokenManager: NSObject {
         }
     }
 
-    // MARK: - vосстановление покупок
+    // MARK: - Restore Purchase
     @MainActor func restorePurchase(escaping: @escaping (Bool) -> Void) {
         Apphud.restorePurchases { subscriptions, _, error in
             if let error = error {
@@ -55,7 +55,7 @@ class TokenManager: NSObject {
         }
     }
 
-    // MARK: - загрузка продуктов с эппхад
+    // MARK: - Load Tokens
     @MainActor
     func loadPaywalls(completion: @escaping () -> Void) {
         Apphud.paywallsDidLoadCallback { paywalls, _ in

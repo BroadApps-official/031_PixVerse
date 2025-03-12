@@ -4,13 +4,13 @@ import Foundation
 final class NetworkService {
     static let shared = NetworkService()
     
-    private let baseURL = "https://vewapnew.online/api/user"
+    private let baseURL = "https:/testingerapp.site/api/user"
     private let bearerToken = "rE176kzVVqjtWeGToppo4lRcbz3HRLoBrZREEvgQ8fKdWuxySCw6tv52BdLKBkZTOHWda5ISwLUVTyRoZEF0A33Xpk63lF9wTCtDxOs8XK3YArAiqIXVb7ZS4IK61TYPQMu5WqzFWwXtZc1jo8w"
 
     private init() {}
 
     func fetchEffects(forApp appName: String, completionHandler: @escaping (Result<[Template], Error>) -> Void) {
-        guard let baseUrl = URL(string: "https://vewapnew.online/api/templatesByCategories") else {
+        guard let baseUrl = URL(string: "https://testingerapp.site/api/templatesByCategories") else {
             print("Failed to create base URL")
             completionHandler(.failure(NetworkError.invalidURL))
             return

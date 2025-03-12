@@ -17,7 +17,7 @@
 		E70DDFE52D26BEFE006749D8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E70DDFE42D26BEFE006749D8 /* GoogleService-Info.plist */; };
 		E70DE0022D2C13AF006749D8 /* Siren in Frameworks */ = {isa = PBXBuildFile; productRef = E70DE0012D2C13AF006749D8 /* Siren */; };
 		E712CAF72D0B0689005C0565 /* LottieAnimation.json in Resources */ = {isa = PBXBuildFile; fileRef = E712CAF62D0B0689005C0565 /* LottieAnimation.json */; };
-		E71D00432CDC546E0011C8AF /* VideoSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71D00422CDC546E0011C8AF /* VideoSaver.swift */; };
+		E71D00432CDC546E0011C8AF /* VideoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71D00422CDC546E0011C8AF /* VideoManager.swift */; };
 		E71D00752CE3676C0011C8AF /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71D00742CE3676C0011C8AF /* SubscriptionManager.swift */; };
 		E73FD54F2CCA68E200F7C940 /* UIFontExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73FD54E2CCA68E200F7C940 /* UIFontExtention.swift */; };
 		E73FD5522CCAA1CD00F7C940 /* SubscriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73FD5512CCAA1CD00F7C940 /* SubscriptionViewController.swift */; };
@@ -59,7 +59,7 @@
 		E7A153782CEE1C5D002A7A36 /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A153772CEE1C5D002A7A36 /* ResultViewController.swift */; };
 		E7A1537D2CEF4203002A7A36 /* GeneratedVideoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A1537C2CEF4203002A7A36 /* GeneratedVideoModel.swift */; };
 		E7A1537F2CEF42E5002A7A36 /* AnimationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A1537E2CEF42E5002A7A36 /* AnimationCell.swift */; };
-		E7A153812CEF4654002A7A36 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A153802CEF4654002A7A36 /* CacheManager.swift */; };
+		E7A153812CEF4654002A7A36 /* MemoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A153802CEF4654002A7A36 /* MemoryManager.swift */; };
 		E7A153842CEF6B25002A7A36 /* NoAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A153832CEF6B25002A7A36 /* NoAnimationView.swift */; };
 		E7B113942C14922E00E96820 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E7B113932C14922E00E96820 /* Localizable.strings */; };
 		E7B113982C149CC000E96820 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B113972C149CC000E96820 /* OnboardingViewController.swift */; };
@@ -81,7 +81,7 @@
 		E7011C362C1C8AA400B3A4D7 /* UIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDevice.swift; sourceTree = "<group>"; };
 		E70DDFE42D26BEFE006749D8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E712CAF62D0B0689005C0565 /* LottieAnimation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = LottieAnimation.json; sourceTree = "<group>"; };
-		E71D00422CDC546E0011C8AF /* VideoSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSaver.swift; sourceTree = "<group>"; };
+		E71D00422CDC546E0011C8AF /* VideoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoManager.swift; sourceTree = "<group>"; };
 		E71D00742CE3676C0011C8AF /* SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionManager.swift; sourceTree = "<group>"; };
 		E73FD54E2CCA68E200F7C940 /* UIFontExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFontExtention.swift; sourceTree = "<group>"; };
 		E73FD5512CCAA1CD00F7C940 /* SubscriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionViewController.swift; sourceTree = "<group>"; };
@@ -122,7 +122,7 @@
 		E7A153772CEE1C5D002A7A36 /* ResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
 		E7A1537C2CEF4203002A7A36 /* GeneratedVideoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratedVideoModel.swift; sourceTree = "<group>"; };
 		E7A1537E2CEF42E5002A7A36 /* AnimationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationCell.swift; sourceTree = "<group>"; };
-		E7A153802CEF4654002A7A36 /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
+		E7A153802CEF4654002A7A36 /* MemoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryManager.swift; sourceTree = "<group>"; };
 		E7A153832CEF6B25002A7A36 /* NoAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoAnimationView.swift; sourceTree = "<group>"; };
 		E7B113932C14922E00E96820 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		E7B113972C149CC000E96820 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
@@ -443,8 +443,8 @@
 			isa = PBXGroup;
 			children = (
 				E7011C362C1C8AA400B3A4D7 /* UIDevice.swift */,
-				E71D00422CDC546E0011C8AF /* VideoSaver.swift */,
-				E7A153802CEF4654002A7A36 /* CacheManager.swift */,
+				E71D00422CDC546E0011C8AF /* VideoManager.swift */,
+				E7A153802CEF4654002A7A36 /* MemoryManager.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -612,7 +612,7 @@
 				E73FD54F2CCA68E200F7C940 /* UIFontExtention.swift in Sources */,
 				E7638B2B2D77C76100F16812 /* HeaderView.swift in Sources */,
 				E73FD55B2CCAFE3D00F7C940 /* SFTermsOfUse.swift in Sources */,
-				E7A153812CEF4654002A7A36 /* CacheManager.swift in Sources */,
+				E7A153812CEF4654002A7A36 /* MemoryManager.swift in Sources */,
 				E73FD55D2CCAFEB800F7C940 /* SFRestrorePurchaseLabel.swift in Sources */,
 				E7A153782CEE1C5D002A7A36 /* ResultViewController.swift in Sources */,
 				E7011C372C1C8AA400B3A4D7 /* UIDevice.swift in Sources */,
@@ -636,7 +636,7 @@
 				E759BEDB2C1478D500FC2CCB /* AppDelegate.swift in Sources */,
 				E7A153502CEBAEF1002A7A36 /* NetworkService.swift in Sources */,
 				E759BEDD2C1478D500FC2CCB /* SceneDelegate.swift in Sources */,
-				E71D00432CDC546E0011C8AF /* VideoSaver.swift in Sources */,
+				E71D00432CDC546E0011C8AF /* VideoManager.swift in Sources */,
 				E7638B1F2D77391F00F16812 /* TokenManager.swift in Sources */,
 				E7638B292D779E7F00F16812 /* TokensView.swift in Sources */,
 				E7B1139A2C14AE2B00E96820 /* OnboardingPageViewController.swift in Sources */,
@@ -795,7 +795,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3;
+				MARKETING_VERSION = 2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.p1xv3rs.erpi2al;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -830,7 +830,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3;
+				MARKETING_VERSION = 2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.p1xv3rs.erpi2al;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

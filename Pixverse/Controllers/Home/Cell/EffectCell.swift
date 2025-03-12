@@ -90,7 +90,7 @@ final class EffectCell: UICollectionViewCell {
     }
 
     private func loadVideo(for template: Template) {
-        CacheManager.shared.loadVideo(for: template) { [weak self] result in
+        MemoryManager.shared.loadVideo(for: template) { [weak self] result in
             switch result {
             case let .success(videoURL):
                 self?.playVideo(from: videoURL)

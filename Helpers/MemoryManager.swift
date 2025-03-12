@@ -1,8 +1,8 @@
 import Foundation
 import UIKit
 
-final class CacheManager {
-    static let shared = CacheManager()
+final class MemoryManager {
+    static let shared = MemoryManager()
 
     private let fileManager = FileManager.default
     private let videoCacheDirectory: URL

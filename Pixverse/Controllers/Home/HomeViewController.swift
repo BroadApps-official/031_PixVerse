@@ -375,7 +375,7 @@ final class HomeViewController: UIViewController {
                     if data.status == "error" {
                         self.checkGenerationStatus()
                     } else if data.status == "finished" {
-                        let allVideoModels = CacheManager.shared.loadAllVideoModels()
+                        let allVideoModels = MemoryManager.shared.loadAllVideoModels()
                         if let matchingVideoModelIndex = allVideoModels.firstIndex(where: { $0.generationId == generationId }) {
                             let matchingVideoModel = allVideoModels[matchingVideoModelIndex]
 
@@ -388,7 +388,7 @@ final class HomeViewController: UIViewController {
                             }
                         }
                     } else {
-                        let allVideoModels = CacheManager.shared.loadAllVideoModels()
+                        let allVideoModels = MemoryManager.shared.loadAllVideoModels()
 
                         if let matchingVideoModel = allVideoModels.first(where: { $0.generationId == generationId }) {
                             self.pollGenerationStatus(
@@ -421,7 +421,7 @@ final class HomeViewController: UIViewController {
         var finalImagePath = permanentImagePath ?? imagePath
         var existingModel: GeneratedVideoModel?
 
-        let allVideoModels = CacheManager.shared.loadAllVideoModels()
+        let allVideoModels = MemoryManager.shared.loadAllVideoModels()
         if let model = allVideoModels.first(where: { $0.generationId == generationId }) {
             existingModel = model
             finalImagePath = model.imagePath ?? finalImagePath
@@ -437,7 +437,7 @@ final class HomeViewController: UIViewController {
             generationId: generationId
         )
 
-        CacheManager.shared.saveOrUpdateVideoModel(initialVideo) { success in
+        MemoryManager.shared.saveOrUpdateVideoModel(initialVideo) { success in
             if success {
                 print("Initial MyVideoModel cached successfully.")
             } else {
@@ -452,12 +452,12 @@ final class HomeViewController: UIViewController {
                     case let .success(data):
 
                         if data.status == "finished", let resultUrl = data.resultUrl {
-                            if let existingModel = CacheManager.shared.loadAllVideoModels().first(where: { $0.generationId == generationId }) {
+                            if let existingModel = MemoryManager.shared.loadAllVideoModels().first(where: { $0.generationId == generationId }) {
                                 var updatedVideo = existingModel
                                 updatedVideo.video = resultUrl
                                 updatedVideo.isFinished = true
                                 updatedVideo.imagePath = nil
-                                CacheManager.shared.saveOrUpdateVideoModel(updatedVideo) { success in
+                                MemoryManager.shared.saveOrUpdateVideoModel(updatedVideo) { success in
                                     if success {
                                         print("Updated MyVideoModel cached successfully.")
                                     } else {
@@ -575,11 +575,11 @@ final class HomeViewController: UIViewController {
     }
 
     private func cleanUnfinishedVideos() {
-        let allModels = CacheManager.shared.loadAllVideoModels()
+        let allModels = MemoryManager.shared.loadAllVideoModels()
         let unfinishedModels = allModels.filter { $0.isFinished == false }
 
         for model in unfinishedModels {
-            CacheManager.shared.deleteVideoModel(withId: model.id)
+            MemoryManager.shared.deleteVideoModel(withId: model.id)
         }
     }
 

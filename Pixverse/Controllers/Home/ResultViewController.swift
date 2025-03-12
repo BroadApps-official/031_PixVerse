@@ -216,7 +216,7 @@ final class ResultViewController: UIViewController {
             return
         }
 
-        VideoSaver.downloadVideo(from: videoURL) { localURL in
+        VideoManager.downloadVideo(from: videoURL) { localURL in
             guard let localURL = localURL else {
                 DispatchQueue.main.async {
                     self.videoGalleryErrorAlert()
@@ -224,7 +224,7 @@ final class ResultViewController: UIViewController {
                 return
             }
 
-            let mediaSaver = VideoSaver()
+            let mediaSaver = VideoManager()
             mediaSaver.saveVideoToGallery(videoURL: localURL) { success in
                 DispatchQueue.main.async {
                     if success {
@@ -253,7 +253,7 @@ final class ResultViewController: UIViewController {
             return
         }
 
-        VideoSaver.downloadVideo(from: videoURL) { localURL in
+        VideoManager.downloadVideo(from: videoURL) { localURL in
             guard let localURL = localURL else {
                 DispatchQueue.main.async {
                     self.videoFilesErrorAlert()
@@ -276,7 +276,7 @@ final class ResultViewController: UIViewController {
                                       preferredStyle: .alert)
 
         let deleteAction = UIAlertAction(title: L.delete, style: .destructive) { _ in
-            CacheManager.shared.deleteVideoModel(withId: self.model.id)
+            MemoryManager.shared.deleteVideoModel(withId: self.model.id)
             self.dismiss(animated: true, completion: nil)
         }
 

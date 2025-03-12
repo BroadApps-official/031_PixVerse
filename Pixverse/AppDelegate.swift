@@ -47,24 +47,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func preloadTemplates() {
-        let savedTemplates = CacheManager.shared.loadAllTemplatesFromCache()
+        let savedTemplates = MemoryManager.shared.loadAllTemplatesFromCache()
         cachedTemplates = savedTemplates
 
         NetworkService.shared.fetchEffects(forApp: Bundle.main.bundleIdentifier ?? "com.test.test") { [weak self] result in
             switch result {
             case let .success(templates):
                 guard let self = self else { return }
-
                 Task {
+                    var updatedTemplates = self.cachedTemplates
+
                     for serverTemplate in templates {
-                        if let cachedTemplate = self.cachedTemplates.first(where: { $0.id == serverTemplate.id }) {
+                        if let cachedTemplate = updatedTemplates.first(where: { $0.id == serverTemplate.id }) {
                             if cachedTemplate.preview != serverTemplate.preview {
                                 do {
                                     let videoURL = try await self.downloadAndSaveVideo(for: serverTemplate)
                                     var updatedTemplate = serverTemplate
                                     updatedTemplate.localVideoName = videoURL?.lastPathComponent
-                                    if let index = self.cachedTemplates.firstIndex(where: { $0.id == serverTemplate.id }) {
-                                        self.cachedTemplates[index] = updatedTemplate
+                                    if let index = updatedTemplates.firstIndex(where: { $0.id == serverTemplate.id }) {
+                                        updatedTemplates[index] = updatedTemplate
                                     }
                                 } catch {
                                     print("Error updating video for template \(serverTemplate.id): \(error.localizedDescription)")
@@ -78,19 +79,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                     let videoURL = try await self.downloadAndSaveVideo(for: serverTemplate)
                                     var newTemplate = serverTemplate
                                     newTemplate.localVideoName = videoURL?.lastPathComponent
-                                    self.cachedTemplates.append(newTemplate)
-                                    
+                                    updatedTemplates.append(newTemplate)
+
                                     print("Added new template \(serverTemplate.id).")
                                 } catch {
                                     print("Error downloading video for new template \(serverTemplate.id): \(error.localizedDescription)")
                                 }
                             }
                         }
+                    }
 
-                        CacheManager.shared.saveTemplateToCache(self.cachedTemplates)
-                        DispatchQueue.main.async {
-                            NotificationCenter.default.post(name: .templatesUpdated, object: self.cachedTemplates)
-                        }
+                    let serverTemplateIDs = Set(templates.map { $0.id })
+                    let removedTemplates = updatedTemplates.filter { !serverTemplateIDs.contains($0.id) }
+                    if !removedTemplates.isEmpty {
+                        print("Removing templates not found on server: \(removedTemplates.map { $0.id })")
+                    }
+                    updatedTemplates.removeAll { !serverTemplateIDs.contains($0.id) }
+                    self.cachedTemplates = updatedTemplates
+                    MemoryManager.shared.saveTemplateToCache(self.cachedTemplates)
+
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .templatesUpdated, object: self.cachedTemplates)
                     }
                 }
 
@@ -102,7 +111,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private func downloadAndSaveVideo(for template: Template) async throws -> URL? {
         return try await withCheckedThrowingContinuation { continuation in
-            CacheManager.shared.saveVideo(for: template) { result in
+            MemoryManager.shared.saveVideo(for: template) { result in
                 switch result {
                 case let .success(videoURL):
                     print("Video successfully saved for template \(template.id).")

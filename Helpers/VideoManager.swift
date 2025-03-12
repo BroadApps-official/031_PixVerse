@@ -1,7 +1,7 @@
 import UIKit
 import AVFoundation
 
-class VideoSaver: NSObject {
+class VideoManager: NSObject {
     
     private var completion: ((Bool) -> Void)?
     

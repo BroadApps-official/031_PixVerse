@@ -72,7 +72,7 @@ final class MyAnimationsViewController: UIViewController {
     }
 
     private func loadAllVideoModels() {
-        let allVideoModels = CacheManager.shared.loadAllVideoModels()
+        let allVideoModels = MemoryManager.shared.loadAllVideoModels()
 
         videoModels = allVideoModels.sorted { model1, model2 -> Bool in
             model1.createdAt > model2.createdAt
@@ -250,7 +250,7 @@ extension MyAnimationsViewController {
             return
         }
 
-        VideoSaver.downloadVideo(from: videoURL) { localURL in
+        VideoManager.downloadVideo(from: videoURL) { localURL in
             guard let localURL = localURL else {
                 DispatchQueue.main.async {
                     self.videoGalleryErrorAlert()
@@ -258,7 +258,7 @@ extension MyAnimationsViewController {
                 return
             }
 
-            let mediaSaver = VideoSaver()
+            let mediaSaver = VideoManager()
             mediaSaver.saveVideoToGallery(videoURL: localURL) { success in
                 DispatchQueue.main.async {
                     if success {
@@ -277,7 +277,7 @@ extension MyAnimationsViewController {
             return
         }
 
-        VideoSaver.downloadVideo(from: videoURL) { localURL in
+        VideoManager.downloadVideo(from: videoURL) { localURL in
             guard let localURL = localURL else {
                 DispatchQueue.main.async {
                     self.videoFilesErrorAlert()
@@ -302,7 +302,7 @@ extension MyAnimationsViewController {
         let deleteAction = UIAlertAction(title: L.delete, style: .destructive) { _ in
             guard let videoModel = self.selectedVideoModel else { return }
 
-            CacheManager.shared.deleteVideoModel(withId: videoModel.id)
+            MemoryManager.shared.deleteVideoModel(withId: videoModel.id)
 
             if let index = self.videoModels.firstIndex(where: { $0.id == videoModel.id }) {
                 self.videoModels.remove(at: index)

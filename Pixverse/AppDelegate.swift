@@ -67,6 +67,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                     if let index = updatedTemplates.firstIndex(where: { $0.id == serverTemplate.id }) {
                                         updatedTemplates[index] = updatedTemplate
                                     }
+                                    
+                                    DispatchQueue.main.async {
+                                        NotificationCenter.default.post(name: .templatesUpdated, object: updatedTemplates)
+                                    }
                                 } catch {
                                     print("Error updating video for template \(serverTemplate.id): \(error.localizedDescription)")
                                 }
@@ -82,6 +86,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                     updatedTemplates.append(newTemplate)
 
                                     print("Added new template \(serverTemplate.id).")
+
+                                    DispatchQueue.main.async {
+                                        NotificationCenter.default.post(name: .templatesUpdated, object: updatedTemplates)
+                                    }
                                 } catch {
                                     print("Error downloading video for new template \(serverTemplate.id): \(error.localizedDescription)")
                                 }
@@ -108,6 +116,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+
 
     private func downloadAndSaveVideo(for template: Template) async throws -> URL? {
         return try await withCheckedThrowingContinuation { continuation in

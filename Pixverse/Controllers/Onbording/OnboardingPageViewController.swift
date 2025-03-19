@@ -5,7 +5,7 @@ final class OnboardingPageViewController: UIViewController {
     // MARK: - Types
 
     enum Page {
-        case animation, video, effects, save, rate, notification
+        case video, effects, save, rate, notification
     }
 
     private let mainLabel = UILabel()
@@ -39,7 +39,6 @@ final class OnboardingPageViewController: UIViewController {
         view.backgroundColor = UIColor.bgPrimary
 
         switch page {
-        case .animation: drawAnimation()
         case .video: drawVideo()
         case .effects: drawEffects()
         case .save: drawSave()
@@ -49,57 +48,6 @@ final class OnboardingPageViewController: UIViewController {
     }
 
     // MARK: - Draw
-
-    private func drawAnimation() {
-        view.backgroundColor = UIColor.black
-        setupVideo()
-
-        view.addSubviews(videoView)
-
-        videoView.snp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalToSuperview()
-        }
-    }
-
-    private func setupVideo() {
-        guard let videoURL = Bundle.main.url(forResource: "onb_video", withExtension: "mp4") else {
-            print("Video not found")
-            return
-        }
-        player = AVPlayer(url: videoURL)
-        playerLayer = AVPlayerLayer(player: player)
-        playerLayer?.videoGravity = .resizeAspectFill
-        playerLayer?.frame = videoView.bounds
-        videoView.layer.addSublayer(playerLayer!)
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(restartVideo),
-            name: .AVPlayerItemDidPlayToEndTime,
-            object: player?.currentItem
-        )
-
-        player?.play()
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        playerLayer?.frame = videoView.bounds
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        player?.pause()
-    }
-
-    @objc private func restartVideo() {
-        player?.seek(to: .zero)
-        player?.play()
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem)
-    }
 
     private func drawVideo() {
         imageView.image = UIImage(named: "onb_video_image")

@@ -623,12 +623,22 @@ final class HomeViewController: UIViewController {
     }
 
     private func toggleActionProgress() {
-        if templates.isEmpty {
-            actionProgress.startAnimating()
-            selectButton.isHidden = true
+        if experimentV == "v1" {
+            if templates.isEmpty {
+                actionProgress.startAnimating()
+                selectButton.isHidden = true
+            } else {
+                actionProgress.stopAnimating()
+                selectButton.isHidden = false
+            }
         } else {
-            actionProgress.stopAnimating()
-            selectButton.isHidden = false
+            if groupedTemplates.isEmpty {
+                actionProgress.startAnimating()
+                selectButton.isHidden = true
+            } else {
+                actionProgress.stopAnimating()
+                selectButton.isHidden = true
+            }
         }
     }
 

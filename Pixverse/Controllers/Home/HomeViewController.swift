@@ -125,9 +125,11 @@ final class HomeViewController: UIViewController {
                 fetchSingleStatus(for: lastGenerationId)
             }
         }
-
+        
         if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-            templates = appDelegate.cachedTemplates
+            templates = appDelegate.cachedTemplates.filter {
+                !($0.title == "Hug AI" || $0.categoryTitleEn == "Hug and Kiss")
+            }
             print("templatestemplates: \(templates)")
         }
 
@@ -146,7 +148,11 @@ final class HomeViewController: UIViewController {
     }
 
     private func groupTemplatesByCategory() {
-        let groupedDict = Dictionary(grouping: templates, by: { $0.categoryTitleEn })
+        let filteredTemplates = templates.filter {
+            !($0.title == "Hug AI" || $0.categoryTitleEn == "Hug and Kiss")
+        }
+
+        let groupedDict = Dictionary(grouping: filteredTemplates, by: { $0.categoryTitleEn })
         groupedTemplates = groupedDict.map { ($0.key, $0.value) }.sorted { $0.0 < $1.0 }
     }
 

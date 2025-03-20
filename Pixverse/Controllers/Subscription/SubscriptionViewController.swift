@@ -26,10 +26,6 @@ final class SubscriptionViewController: UIViewController {
     private let isExitShown: Bool
     private var purchaseManager: SubscriptionManager
 
-    private let videoView = UIView()
-    private var player: AVPlayer?
-    private var playerLayer: AVPlayerLayer?
-
     // MARK: - Initializer
 
     init(isFromOnboarding: Bool, isExitShown: Bool) {
@@ -80,8 +76,6 @@ final class SubscriptionViewController: UIViewController {
     // MARK: - Private methods
 
     private func drawSelf() {
-        setupVideo()
-
         subImageView.image = UIImage(named: "sub_sub_image")
         gradientImageView.image = UIImage(named: "sub_gradient_image")
 
@@ -99,7 +93,6 @@ final class SubscriptionViewController: UIViewController {
 
         view.addSubviews(
             subImageView,
-            videoView,
             gradientImageView,
             annualView,
             weeklyView,
@@ -114,11 +107,6 @@ final class SubscriptionViewController: UIViewController {
         subImageView.snp.makeConstraints { make in
             make.top.trailing.leading.equalToSuperview()
             make.height.equalTo(UIScreen.main.bounds.height * (414.0 / 844.0))
-        }
-
-        videoView.snp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
-            make.height.equalTo(videoView.snp.width).multipliedBy(1080.0 / 1000.0)
         }
 
         gradientImageView.snp.makeConstraints { make in
@@ -182,47 +170,6 @@ final class SubscriptionViewController: UIViewController {
             make.trailing.equalToSuperview().inset(16)
             make.size.equalTo(23)
         }
-    }
-
-    // MARK: - Video
-    private func setupVideo() {
-        guard let videoURL = Bundle.main.url(forResource: "sub_video", withExtension: "mp4") else {
-            print("Video not found")
-            return
-        }
-        player = AVPlayer(url: videoURL)
-        playerLayer = AVPlayerLayer(player: player)
-        playerLayer?.videoGravity = .resizeAspectFill
-        playerLayer?.frame = videoView.bounds
-        videoView.layer.addSublayer(playerLayer!)
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(restartVideo),
-            name: .AVPlayerItemDidPlayToEndTime,
-            object: player?.currentItem
-        )
-
-        player?.play()
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        playerLayer?.frame = videoView.bounds
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        player?.pause()
-    }
-
-    @objc private func restartVideo() {
-        player?.seek(to: .zero)
-        player?.play()
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem)
     }
 
     // MARK: - Actions

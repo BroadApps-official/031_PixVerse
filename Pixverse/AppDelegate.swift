@@ -68,6 +68,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                         updatedTemplates[index] = updatedTemplate
                                     }
                                     
+                                    self.cachedTemplates = updatedTemplates
+                                    MemoryManager.shared.saveTemplateToCache(self.cachedTemplates)
+                                    
                                     DispatchQueue.main.async {
                                         NotificationCenter.default.post(name: .templatesUpdated, object: updatedTemplates)
                                     }
@@ -86,6 +89,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                     updatedTemplates.append(newTemplate)
 
                                     print("Added new template \(serverTemplate.id).")
+                                    
+                                    self.cachedTemplates = updatedTemplates
+                                    MemoryManager.shared.saveTemplateToCache(self.cachedTemplates)
 
                                     DispatchQueue.main.async {
                                         NotificationCenter.default.post(name: .templatesUpdated, object: updatedTemplates)

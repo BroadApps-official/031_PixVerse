@@ -141,19 +141,19 @@ extension OnboardingViewController {
                  firstCircleView, fifthCircleView]
             )
         case .rate:
-            DispatchQueue.main.async {
-                if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
-                    SKStoreReviewController.requestReview(in: scene)
+            if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                SKStoreReviewController.requestReview(in: scene)
+                // Delay the transition to give time for the rating dialog to appear
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                    guard let self = self else { return }
+                    self.pageViewController.setViewControllers([self.fifth], direction: .forward, animated: true)
+                    self.currentPage = .notification
+                    self.circleStackView.addArrangedSubviews(
+                        [self.secondCircleView, self.thirdCircleView, self.fourthCircleView,
+                         self.fifthCircleView, self.firstCircleView]
+                    )
                 }
             }
-
-            pageViewController.setViewControllers([fifth], direction: .forward, animated: true)
-            currentPage = .notification
-            circleStackView.addArrangedSubviews(
-                [secondCircleView, thirdCircleView, fourthCircleView,
-                 fifthCircleView, firstCircleView]
-            )
-
         case .notification:
             UserDefaults.standard.set(true, forKey: "HasLaunchedBefore")
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { [weak self] _, _ in

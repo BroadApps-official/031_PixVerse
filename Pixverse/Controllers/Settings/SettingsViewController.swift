@@ -4,6 +4,7 @@ import SafariServices
 import StoreKit
 import UIKit
 import WebKit
+import UserNotifications
 
 final class SettingsViewController: UIViewController {
     // MARK: - Properties
@@ -61,6 +62,15 @@ final class SettingsViewController: UIViewController {
         super.viewWillAppear(animated)
         Task {
             await tokenCount()
+        }
+        checkNotificationStatus()
+    }
+    
+    private func checkNotificationStatus() {
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            DispatchQueue.main.async {
+                self?.notificationsView.switchControl.isOn = settings.authorizationStatus == .authorized
+            }
         }
     }
     
@@ -148,7 +158,19 @@ final class SettingsViewController: UIViewController {
 // MARK: - NotificationSettingsViewViewDelegate
 extension SettingsViewController: NotificationSettingsViewViewDelegate {
     func didTapNotificationView(switchValue: Bool) {
-        print("notifications switchValue: \(switchValue)")
+        if switchValue {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { [weak self] granted, _ in
+                DispatchQueue.main.async {
+                    self?.notificationsView.switchControl.isOn = granted
+                }
+            }
+        } else {
+            // If user turns off notifications, we can't programmatically disable them
+            // They need to do it in system settings
+            if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(settingsUrl)
+            }
+        }
     }
 }
 

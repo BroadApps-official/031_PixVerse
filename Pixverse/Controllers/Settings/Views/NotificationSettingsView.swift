@@ -10,7 +10,7 @@ final class NotificationSettingsView: UIControl {
 
     private let buttonBackgroundView = UIButton(type: .system)
     private let titleLabel = UILabel()
-    private let switchControl = UISwitch()
+    let switchControl = UISwitch()
 
     private var observation: NSKeyValueObservation?
 

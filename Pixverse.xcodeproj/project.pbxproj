@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		57ACB2062D9806A500AD969F /* pix.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 57ACB2052D9806A500AD969F /* pix.storekit */; };
 		E7011C372C1C8AA400B3A4D7 /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7011C362C1C8AA400B3A4D7 /* UIDevice.swift */; };
 		E70DDFD72D26B6B9006749D8 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E70DDFD62D26B6B9006749D8 /* FirebaseAnalytics */; };
 		E70DDFD92D26B6B9006749D8 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = E70DDFD82D26B6B9006749D8 /* FirebaseAnalyticsOnDeviceConversion */; };
@@ -76,6 +77,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		57ACB2052D9806A500AD969F /* pix.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = pix.storekit; sourceTree = "<group>"; };
 		E7011C362C1C8AA400B3A4D7 /* UIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDevice.swift; sourceTree = "<group>"; };
 		E70DDFE42D26BEFE006749D8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E712CAF62D0B0689005C0565 /* LottieAnimation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = LottieAnimation.json; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 			isa = PBXGroup;
 			children = (
 				E71D00742CE3676C0011C8AF /* SubscriptionManager.swift */,
+				57ACB2052D9806A500AD969F /* pix.storekit */,
 				E7638B1E2D77391F00F16812 /* TokenManager.swift */,
 			);
 			path = Payment;
@@ -531,6 +534,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57ACB2062D9806A500AD969F /* pix.storekit in Resources */,
 				E7B113942C14922E00E96820 /* Localizable.strings in Resources */,
 				E70DDFE52D26BEFE006749D8 /* GoogleService-Info.plist in Resources */,
 				E759BEE42C1478D600FC2CCB /* Assets.xcassets in Resources */,
